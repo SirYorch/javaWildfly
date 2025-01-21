@@ -19,7 +19,7 @@ public class GestionTarifas {
     public void crearTarifa(Tarifa tarifa) {
         tarifaDAO.crearTarifa(tarifa);
     }
-    public Tarifa ObtenerTarifaPorId(Long id) {
+    public Tarifa obtenerTarifaPorId(Long id) {
         return tarifaDAO.buscarPorId(id);
     }
 
