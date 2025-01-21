@@ -2,8 +2,8 @@ package ups.edu.parking.Gestion;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import ups.edu.parking.Objetos.Usuario;
 import ups.edu.parking.DAO.UsuarioDAO;
-import ups .edu.parking.Objetos.Usuario;
 
 import java.util.List;
 

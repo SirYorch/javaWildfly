@@ -13,11 +13,10 @@ public class Main {
     @Inject
     UsuarioDAO usuarioDAO;
 
-
     @PostConstruct
     public void init() {
         usuarioDAO.listarUsuarios().forEach(System.out::println);
-        System.out.println("HolaMundo");
-        usuarioDAO.listarUsuarios().forEach(System.out::println);
+        System.out.println("Holas");
+
     }
 }

@@ -6,7 +6,6 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import ups.edu.parking.Objetos.Usuario;
 
-
 import java.util.List;
 
 @ApplicationScoped

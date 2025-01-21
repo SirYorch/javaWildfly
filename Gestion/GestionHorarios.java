@@ -2,8 +2,8 @@ package ups.edu.parking.Gestion;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import ups.edu.parking.DAO.HorarioDAO;
 import ups.edu.parking.Objetos.Horario;
+import ups.edu.parking.DAO.HorarioDAO;
 
 import java.util.List;
 

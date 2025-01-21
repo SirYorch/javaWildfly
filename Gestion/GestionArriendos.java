@@ -2,8 +2,9 @@ package ups.edu.parking.Gestion;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import ups.edu.parking.DAO.ArriendoDAO;
 import ups.edu.parking.Objetos.Arriendo;
+import ups.edu.parking.DAO.ArriendoDAO;
+
 
 import java.util.List;
 
