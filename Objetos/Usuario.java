@@ -14,12 +14,13 @@ public abstract class Usuario implements Serializable {
 
     public Usuario() {}
 
-    public Usuario(Long id, String nombre, String telefono, String direccion, String cedula) {
+    public Usuario(Long id, String nombre, String telefono, String direccion, String cedula, String placa) {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.cedula = cedula;
+        this.placa = placa;
     }
 
     @Id
@@ -37,6 +38,18 @@ public abstract class Usuario implements Serializable {
 
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
+
+
+    @Column(name = "placa", nullable = false, unique = true, length = 10)
+    private String placa;
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
 
     // Getters y Setters
     public Long getId() {

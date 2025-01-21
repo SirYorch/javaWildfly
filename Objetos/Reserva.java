@@ -19,6 +19,7 @@ public class Reserva implements Serializable {
         this.inicio = inicio;
         this.fin = fin;
         this.usuario = usuario;
+        
     }
 
     @Id

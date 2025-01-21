@@ -12,27 +12,21 @@ public class Espacio implements Serializable {
 
     public Espacio() {}
 
-    public Espacio(Long id, int numero, String letra, String estado) {
-        this.id = id;
-        this.numero = numero;
-        this.letra = letra;
-        this.estado = estado;
+    public Espacio(int filas, int columnas ) {
+        this.filas = filas;
+        this.columnas = columnas;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "numero", nullable = false)
-    private int numero;
+    @Column(name = "filas", nullable = false)
+    private int filas;
 
-    @Column(name = "letra", nullable = false, length = 5)
-    private String letra;
+    @Column(name = "columnas", nullable = false, length = 20)
+    private int columnas;
 
-    @Column(name = "estado", nullable = false, length = 20)
-    private String estado;
-
-    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -41,28 +35,20 @@ public class Espacio implements Serializable {
         this.id = id;
     }
 
-    public int getNumero() {
-        return numero;
+    public int getFilas() {
+        return filas;
     }
 
-    public void setNumero(int numero) {
-        this.numero = numero;
+    public void setFilas(int filas) {
+        this.filas = filas;
     }
 
-    public String getLetra() {
-        return letra;
+    public int getColumnas() {
+        return columnas;
     }
 
-    public void setLetra(String letra) {
-        this.letra = letra;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setColumnas(int columnas) {
+        this.columnas = columnas;
     }
 }
 

@@ -26,6 +26,7 @@ public class Lugar implements Serializable {
 
     @Column(name = "estado", nullable = false, length = 100)
     private String estado;
+
     @Column(name = "posicion", nullable = false, length = 100)
     private String posicion;
 
