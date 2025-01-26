@@ -16,10 +16,10 @@ public class Lugar implements Serializable {
     public Lugar() {}
 
     public Lugar (Long id, String estado, String posicion) {
-            this.id = id;
-            this.estado = estado;
-            this.posicion = posicion;
-        }
+        this.id = id;
+        this.estado = estado;
+        this.posicion = posicion;
+    }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

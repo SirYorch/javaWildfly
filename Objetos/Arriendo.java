@@ -10,9 +10,7 @@ import java.sql.Date;
 public class Arriendo implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-
-
+    
     public Arriendo() {}
 
     public Arriendo(Long id, Date fechaInicio, Date fechaFin, UsuarioCliente usuario, Lugar lugar) {
@@ -40,14 +38,6 @@ public class Arriendo implements Serializable {
     @OneToOne
     @JoinColumn(name = "lugar_id", nullable = false)
     private Lugar lugar;
-
-    public Lugar getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
-    }
 
     // Getters y Setters
     public Long getId() {
@@ -80,5 +70,13 @@ public class Arriendo implements Serializable {
 
     public void setUsuario(UsuarioCliente usuario) {
         this.usuario = usuario;
+    }
+
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
     }
 }

@@ -27,13 +27,6 @@ public class Espacio implements Serializable {
     @Column(name = "columnas", nullable = false, length = 20)
     private int columnas;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public int getFilas() {
         return filas;

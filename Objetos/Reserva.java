@@ -13,13 +13,11 @@ public class Reserva implements Serializable {
 
     public Reserva() {}
 
-    public Reserva(Long id, Ticket ticket, Date inicio, Date fin, Usuario usuario) {
+    public Reserva(Long id, Ticket ticket, Date inicio, Usuario usuario) {
         this.id = id;
         this.ticket = ticket;
         this.inicio = inicio;
-        this.fin = fin;
         this.usuario = usuario;
-        
     }
 
     @Id
@@ -33,8 +31,6 @@ public class Reserva implements Serializable {
     @Column(name = "inicio", nullable = false)
     private Date inicio;
 
-    @Column(name = "fin", nullable = false)
-    private Date fin;
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
@@ -63,14 +59,6 @@ public class Reserva implements Serializable {
 
     public void setInicio(Date inicio) {
         this.inicio = inicio;
-    }
-
-    public Date getFin() {
-        return fin;
-    }
-
-    public void setFin(Date fin) {
-        this.fin = fin;
     }
 
     public Usuario getUsuario() {

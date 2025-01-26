@@ -4,6 +4,7 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import ups.edu.parking.Objetos.Lugar;
 import ups.edu.parking.Objetos.Usuario;
 import ups.edu.parking.Gestion.GestionUsuarios;
 import org.eclipse.microprofile.openapi.annotations.Operation;
@@ -29,7 +30,12 @@ public class UsuarioService {
             @APIResponse(responseCode = "400", description = "Error al crear el usuario")
     })
     public Response crearUsuario(Usuario usuario) {
-        return null;
+        try {
+            gestionUsuarios.crearUsuario(usuario); // Llama al método de gestión para guardar el usuario
+            return Response.status(Response.Status.CREATED).entity(usuario).build(); // Devuelve el usuario creado
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al crear el usuario: " + e.getMessage()).build();
+        }
     }
 
     @GET
@@ -42,7 +48,13 @@ public class UsuarioService {
             @APIResponse(responseCode = "404", description = "Usuario no encontrado")
     })
     public Response obtenerUsuarioPorId(@PathParam("id") Long id) {
-        return null;
+        Usuario usuario = gestionUsuarios.obtenerUsuarioPorId(id);
+        if (usuario != null) {
+            return Response.ok(usuario).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("usuario no encontrado").build();
+        }
     }
 
     @PUT
@@ -55,7 +67,17 @@ public class UsuarioService {
             @APIResponse(responseCode = "404", description = "Usuario no encontrado")
     })
     public Response actualizarUsuario(Usuario usuario) {
-        return null;
+        try {
+            Usuario usuarioExistente = gestionUsuarios.obtenerUsuarioPorId(usuario.getId());
+            if (usuarioExistente != null) {
+                gestionUsuarios.actualizarUsuario(usuario); // Llama al método de gestión para actualizar
+                return Response.ok(usuario).build(); // Devuelve el usuario actualizado
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al actualizar el usuario: " + e.getMessage()).build();
+        }
     }
 
     @DELETE
@@ -67,7 +89,17 @@ public class UsuarioService {
             @APIResponse(responseCode = "400", description = "Error al eliminar el usuario")
     })
     public Response eliminarUsuario(@PathParam("id") Long id) {
-        return null;
+        try {
+            Usuario usuarioExistente = gestionUsuarios.obtenerUsuarioPorId(id);
+            if (usuarioExistente != null) {
+                gestionUsuarios.eliminarUsuario(id); // Llama al método de gestión para eliminar
+                return Response.noContent().build(); // Devuelve 204 No Content
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).entity("Usuario no encontrado").build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al eliminar el usuario: " + e.getMessage()).build();
+        }
     }
 }
 

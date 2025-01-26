@@ -8,19 +8,19 @@ import java.io.Serializable;
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
+
 public abstract class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public Usuario() {}
 
-    public Usuario(Long id, String nombre, String telefono, String direccion, String cedula, String placa) {
+    public Usuario(Long id, String nombre, String telefono, String direccion, String cedula) {
         this.id = id;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.cedula = cedula;
-        this.placa = placa;
     }
 
     @Id
@@ -38,18 +38,6 @@ public abstract class Usuario implements Serializable {
 
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
-
-
-    @Column(name = "placa", nullable = false, unique = true, length = 10)
-    private String placa;
-
-    public String getPlaca() {
-        return placa;
-    }
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
 
     // Getters y Setters
     public Long getId() {
