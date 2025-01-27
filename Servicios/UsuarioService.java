@@ -13,6 +13,8 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
+import java.util.List;
+
 
 @Path("/usuarios")
 public class UsuarioService {
@@ -49,6 +51,25 @@ public class UsuarioService {
     })
     public Response obtenerUsuarioPorId(@PathParam("id") Long id) {
         Usuario usuario = gestionUsuarios.obtenerUsuarioPorId(id);
+        if (usuario != null) {
+            return Response.ok(usuario).build();
+        } else {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("usuario no encontrado").build();
+        }
+    }
+
+    @GET
+    @Path("/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(summary = "Obtener un usuario por ID", description = "Recupera un usuario específico mediante su ID.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Usuario encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
+            @APIResponse(responseCode = "404", description = "Usuario no encontrado")
+    })
+    public Response obtenerUsuarios() {
+        List<Usuario> usuario = gestionUsuarios.listarUsuarios();
         if (usuario != null) {
             return Response.ok(usuario).build();
         } else {
