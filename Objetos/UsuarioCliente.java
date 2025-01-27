@@ -15,5 +15,13 @@ public class UsuarioCliente extends Usuario {
     public UsuarioCliente(Long id, String nombre, String telefono, String direccion, String cedula) {
         super(id, nombre, telefono, direccion, cedula);
     }
+
+    public String getPlaca() {
+        return placa;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
 }
 

@@ -12,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
+import ups.edu.parking.Objetos.UsuarioCliente;
 
 import java.util.List;
 
@@ -31,12 +32,12 @@ public class UsuarioService {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Usuario.class))),
             @APIResponse(responseCode = "400", description = "Error al crear el usuario")
     })
-    public Response crearUsuario(Usuario usuario) {
+    public Response crearUsuario(UsuarioCliente usuarioCliente) {
         try {
-            gestionUsuarios.crearUsuario(usuario); // Llama al método de gestión para guardar el usuario
-            return Response.status(Response.Status.CREATED).entity(usuario).build(); // Devuelve el usuario creado
+            gestionUsuarios.crearUsuario(usuarioCliente); // Llama al método de gestión para guardar el usuario
+            return Response.status(Response.Status.CREATED).entity(usuarioCliente).build(); // Devuelve el usuario creado
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST).entity("Error al crear el usuario: " + e.getMessage()).build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Error al crear el usuario cliente: " + e.getMessage()).build();
         }
     }
 
