@@ -21,16 +21,15 @@ public class GestionUsuarios {
         return usuarioDAO.actualizarUsuario(usuario);
     }
 
-    public Usuario obtenerUsuarioPorId(Long id) {
-        return usuarioDAO.buscarPorId(id);
+    public Usuario obtenerUsuarioPorUid(String uid) {
+        return usuarioDAO.buscarPorUid(uid);
     }
 
     public List<Usuario> listarUsuarios() {
         return usuarioDAO.listarUsuarios();
     }
 
-    public void eliminarUsuario(Long id) {
-        usuarioDAO.eliminarUsuario(id);
+    public void eliminarUsuario(String uid) {
+        usuarioDAO.eliminarUsuario(uid);
     }
 }
-

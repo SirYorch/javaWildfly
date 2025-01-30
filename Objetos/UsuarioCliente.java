@@ -12,8 +12,9 @@ public class UsuarioCliente extends Usuario {
 
     public UsuarioCliente() {}
 
-    public UsuarioCliente(Long id, String nombre, String telefono, String direccion, String cedula) {
-        super(id, nombre, telefono, direccion, cedula);
+    public UsuarioCliente(String uid, String nombre, String telefono, String direccion, String cedula, String placa) {
+        super(uid, nombre, telefono, direccion, cedula);
+        this.placa = placa;
     }
 
     public String getPlaca() {
@@ -24,4 +25,3 @@ public class UsuarioCliente extends Usuario {
         this.placa = placa;
     }
 }
-

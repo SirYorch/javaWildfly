@@ -1,11 +1,9 @@
 package ups.edu.parking.Objetos;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
-
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipo_usuario")
 @JsonSubTypes({
@@ -22,8 +20,8 @@ public abstract class Usuario implements Serializable {
 
     public Usuario() {}
 
-    public Usuario(Long id, String nombre, String telefono, String direccion, String cedula) {
-        this.id = id;
+    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula) {
+        this.uid = uid;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
@@ -33,6 +31,9 @@ public abstract class Usuario implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "uid", unique = true, nullable = false)
+    private String uid;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -53,6 +54,14 @@ public abstract class Usuario implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 
     public String getNombre() {

@@ -24,8 +24,11 @@ public class UsuarioDAO {
         return em.merge(usuario);
     }
 
-    public Usuario buscarPorId(Long id) {
-        return em.find(Usuario.class, id);
+    public Usuario buscarPorUid(String uid) {
+        List<Usuario> usuarios = em.createQuery("SELECT u FROM Usuario u WHERE u.uid = :uid", Usuario.class)
+                .setParameter("uid", uid)
+                .getResultList();
+        return usuarios.isEmpty() ? null : usuarios.get(0);
     }
 
     public List<Usuario> listarUsuarios() {
@@ -33,11 +36,10 @@ public class UsuarioDAO {
     }
 
     @Transactional
-    public void eliminarUsuario(Long id) {
-        Usuario usuario = em.find(Usuario.class, id);
+    public void eliminarUsuario(String uid) {
+        Usuario usuario = buscarPorUid(uid);
         if (usuario != null) {
             em.remove(usuario);
         }
     }
 }
-
