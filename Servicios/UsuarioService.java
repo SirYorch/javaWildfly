@@ -4,26 +4,41 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.HttpHeaders;
+import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Usuario;
 import ups.edu.parking.Objetos.UsuarioAdmin;
 import ups.edu.parking.Objetos.UsuarioCliente;
 import ups.edu.parking.Gestion.GestionUsuarios;
-import org.eclipse.microprofile.openapi.annotations.Operation;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
-import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
-import org.eclipse.microprofile.openapi.annotations.media.Content;
-import org.eclipse.microprofile.openapi.annotations.media.Schema;
+
 import java.util.List;
 
 @Path("/usuarios")
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
 public class UsuarioService {
 
     @Inject
     private GestionUsuarios gestionUsuarios;
 
+    /**
+     * Habilita CORS globalmente para todas las solicitudes a este servicio.
+     */
+    @OPTIONS
+    @Path("{path:.*}")
+    public Response options(@Context HttpHeaders headers) {
+        return Response.ok()
+                .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                .header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS")
+                .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+                .header("Access-Control-Allow-Credentials", "true")
+                .build();
+    }
+
+    /**
+     * Crea un nuevo usuario en la base de datos.
+     */
     @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
     public Response crearUsuario(UsuarioCliente usuarioCliente) {
         try {
             Usuario existente = gestionUsuarios.obtenerUsuarioPorUid(usuarioCliente.getUid());
@@ -31,13 +46,10 @@ public class UsuarioService {
                 return Response.status(Response.Status.CONFLICT)
                         .entity("El usuario ya existe")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
-                        .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-                        .header("Access-Control-Allow-Credentials", "true")
                         .build();
             }
 
-            usuarioCliente = new UsuarioCliente(
+            UsuarioCliente nuevoUsuario = new UsuarioCliente(
                     usuarioCliente.getUid(),
                     usuarioCliente.getNombre(),
                     usuarioCliente.getTelefono(),
@@ -46,14 +58,10 @@ public class UsuarioService {
                     usuarioCliente.getPlaca()
             );
 
-            gestionUsuarios.crearUsuario(usuarioCliente);
-
+            gestionUsuarios.crearUsuario(nuevoUsuario);
             return Response.status(Response.Status.CREATED)
-                    .entity(usuarioCliente)
+                    .entity(nuevoUsuario)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE")
-                    .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
                     .build();
         } catch (Exception e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -63,27 +71,56 @@ public class UsuarioService {
         }
     }
 
+    /**
+     * Obtiene todos los usuarios registrados.
+     */
     @GET
-    @Path("/{uid}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response obtenerUsuarioPorUid(@PathParam("uid") String uid) {
-        Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
-        if (usuario != null) {
-            return Response.ok(usuario)
+    public Response obtenerUsuarios() {
+        try {
+            List<Usuario> usuarios = gestionUsuarios.listarUsuarios();
+            return Response.ok(usuarios)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
-        } else {
-            return Response.status(Response.Status.NOT_FOUND)
-                    .entity("Usuario no encontrado")
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener la lista de usuarios: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         }
     }
 
+    /**
+     * Obtiene un usuario por su UID.
+     */
+    @GET
+    @Path("/{uid}")
+    public Response obtenerUsuarioPorUid(@PathParam("uid") String uid) {
+        try {
+            Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
+            if (usuario != null) {
+                return Response.ok(usuario)
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Usuario no encontrado")
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al buscar usuario: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+
+    /**
+     * Cambia el tipo de usuario entre ADMIN y CLIENTE.
+     */
     @PUT
-    @Path("/cambiarRol/{uid}/{rol}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response cambiarRol(@PathParam("uid") String uid, @PathParam("rol") String nuevoRol) {
+    @Path("/cambiarTipo/{uid}/{tipo_usuario}")
+    public Response cambiarTipoUsuario(@PathParam("uid") String uid, @PathParam("tipo_usuario") String nuevoTipo) {
         try {
             Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
             if (usuario == null) {
@@ -93,28 +130,32 @@ public class UsuarioService {
                         .build();
             }
 
-            if (nuevoRol.equalsIgnoreCase("ADMIN")) {
-                UsuarioAdmin usuarioAdmin = new UsuarioAdmin(
-                        usuario.getUid(), usuario.getNombre(),
-                        usuario.getTelefono(), usuario.getDireccion(),
-                        usuario.getCedula()
+            if (nuevoTipo.equalsIgnoreCase("ADMIN")) {
+                usuario = new UsuarioAdmin(usuario.getUid(), usuario.getNombre(), usuario.getTelefono(), usuario.getDireccion(), usuario.getCedula());
+            } else if (usuario instanceof UsuarioCliente) { // Verifica que sea un cliente antes de obtener placa
+                usuario = new UsuarioCliente(
+                        usuario.getUid(),
+                        usuario.getNombre(),
+                        usuario.getTelefono(),
+                        usuario.getDireccion(),
+                        usuario.getCedula(),
+                        ((UsuarioCliente) usuario).getPlaca()
                 );
-                gestionUsuarios.actualizarUsuario(usuarioAdmin);
             } else {
-                UsuarioCliente usuarioCliente = new UsuarioCliente(
-                        usuario.getUid(), usuario.getNombre(),
-                        usuario.getTelefono(), usuario.getDireccion(),
-                        usuario.getCedula(), ((UsuarioCliente) usuario).getPlaca()
-                );
-                gestionUsuarios.actualizarUsuario(usuarioCliente);
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("El usuario no puede ser convertido en CLIENTE, no es un cliente válido.")
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
             }
 
-            return Response.ok("Rol actualizado correctamente")
+            gestionUsuarios.actualizarUsuario(usuario);
+
+            return Response.ok("Tipo de usuario actualizado correctamente")
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Error al cambiar el rol: " + e.getMessage())
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al cambiar el tipo de usuario: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         }

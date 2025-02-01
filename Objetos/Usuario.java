@@ -29,11 +29,8 @@ public abstract class Usuario implements Serializable {
     }
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "uid", unique = true, nullable = false)
-    private String uid;
+    @Column(name = "uid", unique = true, nullable = false, length = 50)
+    private String uid;  // 🔹 Ahora el UID es la clave primaria
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -47,15 +44,9 @@ public abstract class Usuario implements Serializable {
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
 
-    // Getters y Setters
-    public Long getId() {
-        return id;
-    }
+    // 🔹 Eliminamos el campo ID porque UID es la clave principal
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
+    // 🔹 Getters y Setters
     public String getUid() {
         return uid;
     }
