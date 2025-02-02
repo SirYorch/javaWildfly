@@ -97,16 +97,9 @@ public class UsuarioService {
     public Response obtenerUsuarioPorUid(@PathParam("uid") String uid) {
         try {
             Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
-            if (usuario != null) {
-                return Response.ok(usuario)
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Usuario no encontrado")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
+            return Response.ok(usuario)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Error al buscar usuario: " + e.getMessage())

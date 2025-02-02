@@ -16,9 +16,13 @@ public class UsuarioDAO {
 
     @Transactional
     public void crearUsuario(Usuario usuario) {
-        em.persist(usuario);
+        try {
+            em.persist(usuario);
+            em.flush(); // Forzar la inserción inmediata en la base de datos
+        } catch (Exception e) {
+            e.printStackTrace(); // Para ver errores en la consola de WildFly
+        }
     }
-
     @Transactional
     public Usuario actualizarUsuario(Usuario usuario) {
         return em.merge(usuario);
