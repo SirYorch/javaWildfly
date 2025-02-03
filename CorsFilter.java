@@ -2,6 +2,7 @@ package ups.edu.parking;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -12,15 +13,17 @@ public class CorsFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
+        HttpServletRequest req = (HttpServletRequest) request;
+        System.out.println("CORS Filter ejecutándose..."); // Agrega esta línea
 
         // Configurar los encabezados de CORS
-        res.setHeader("Access-Control-Allow-Origin", "*");
+        res.setHeader("Access-Control-Allow-Origin", "*"); // Especifica el frontend
         res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
         res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
         res.setHeader("Access-Control-Allow-Credentials", "true");
 
-        // Permitir solicitudes OPTIONS sin continuar con la cadena de filtros
-        if ("OPTIONS".equalsIgnoreCase(request.getParameter("method"))) {
+        // Si es una solicitud OPTIONS, termina la respuesta inmediatamente
+        if ("OPTIONS".equalsIgnoreCase(req.getMethod())) {
             res.setStatus(HttpServletResponse.SC_OK);
             return;
         }
@@ -38,4 +41,3 @@ public class CorsFilter implements Filter {
         // Método de destrucción vacío
     }
 }
-
