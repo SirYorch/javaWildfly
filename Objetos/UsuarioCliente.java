@@ -1,4 +1,5 @@
 package ups.edu.parking.Objetos;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -6,7 +7,7 @@ import jakarta.persistence.Entity;
 @Entity
 @DiscriminatorValue("CLIENTE")
 public class UsuarioCliente extends Usuario {
-
+    @JsonProperty("placa")
     @Column(name = "placa", nullable = true, length = 15)
     private String placa;
 

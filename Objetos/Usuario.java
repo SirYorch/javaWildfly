@@ -1,5 +1,6 @@
 package ups.edu.parking.Objetos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -10,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
         @JsonSubTypes.Type(value = UsuarioAdmin.class, name = "ADMIN"),
         @JsonSubTypes.Type(value = UsuarioCliente.class, name = "CLIENTE")
 })
+@JsonIgnoreProperties(ignoreUnknown = true) // Evita errores con campos desconocidos
 @Entity
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
