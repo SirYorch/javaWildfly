@@ -25,8 +25,13 @@ public class GestionReservas {
         return reservaDAO.listarReservas();
     }
 
-    public void eliminarReserva(Long id) {
-        reservaDAO.eliminarReserva(id);
+    public boolean eliminarReserva(Long id) {
+        Reserva reserva = reservaDAO.buscarPorId(id);
+        if (reserva != null) {
+            reservaDAO.eliminarReserva(id);
+            return true;
+        }
+        return false;
     }
 }
 

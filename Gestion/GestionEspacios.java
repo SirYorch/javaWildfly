@@ -4,6 +4,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import ups.edu.parking.Objetos.Espacio;
 import ups.edu.parking.DAO.EspacioDAO;
+import ups.edu.parking.Objetos.Horario;
+import ups.edu.parking.Objetos.Reserva;
 
 import java.util.List;
 
@@ -17,9 +19,6 @@ public class GestionEspacios {
         espacioDAO.crearEspacio(espacio);
     }
 
-    public Espacio actualizarEspacio(Espacio espacio) {
-        return espacioDAO.actualizarEspacio(espacio);
-    }
 
     public Espacio obtenerEspacioPorId(Long id) {
         return espacioDAO.buscarPorId(id);
@@ -29,7 +28,11 @@ public class GestionEspacios {
         return espacioDAO.listarEspacios();
     }
 
-    public void eliminarEspacio(Long id) {
-        espacioDAO.eliminarEspacio(id);
-    }
-}
+    public boolean eliminarEspacio(Long id) {
+        Espacio espacio = espacioDAO.buscarPorId(id);
+        if (espacio != null) {
+            espacioDAO.eliminarEspacio(id);
+            return true;
+        }
+        return false;
+    }}

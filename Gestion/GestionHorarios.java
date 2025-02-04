@@ -25,12 +25,22 @@ public class GestionHorarios {
         return horarioDAO.listarHorarios();
     }
 
-    public Horario actualizarHorario(Horario horario) {
-        return horarioDAO.actualizarHorario(horario);
+    public boolean actualizarHorario(Horario horario) {
+        Horario horarioExistente = horarioDAO.buscarPorId(horario.getId());
+        if (horarioExistente != null) {
+            horarioDAO.actualizarHorario(horario);
+            return true;
+        }
+        return false;
     }
 
-    public void eliminarHorario(Long id) {
-        horarioDAO.eliminarHorario(id);
+    public boolean eliminarHorario(Long id) {
+        Horario horarioExistente = horarioDAO.buscarPorId(id);
+        if (horarioExistente != null) {
+            horarioDAO.eliminarHorario(id);
+            return true;
+        }
+        return false;
     }
 }
 

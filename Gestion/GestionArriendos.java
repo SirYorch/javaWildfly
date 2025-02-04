@@ -30,7 +30,11 @@ public class GestionArriendos {
         return arriendoDAO.listarArriendos();
     }
 
-    public void eliminarArriendo(Long id) {
-        arriendoDAO.eliminarArriendo(id);
-    }
-}
+    public boolean eliminarArriendo(Long id) {
+        Arriendo arriendoExistente = arriendoDAO.buscarPorId(id);
+        if (arriendoExistente != null) {
+            arriendoDAO.eliminarArriendo(id);
+            return true;
+        }
+        return false;
+    }}

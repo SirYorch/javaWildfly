@@ -27,7 +27,12 @@ public class GestionTarifas {
         return tarifaDAO.listarTarifas();
     }
 
-    public void eliminarTarifa(Long id) {
-        tarifaDAO.eliminarTarifa(id);
+    public boolean eliminarTarifa(Long id) {
+        Tarifa tarifa = tarifaDAO.buscarPorId(id);
+        if (tarifa != null) {
+            tarifaDAO.eliminarTarifa(id);
+            return true;
+        }
+        return false;
     }
 }
