@@ -20,7 +20,7 @@ public class GestionTarifas {
         tarifaDAO.crearTarifa(tarifa);
     }
     public Tarifa obtenerTarifaPorId(Long id) {
-        return tarifaDAO.buscarPorId(id);
+        return tarifaDAO.obtenerPorId(id);
     }
 
     public List<Tarifa> listarTarifas() {
@@ -28,11 +28,14 @@ public class GestionTarifas {
     }
 
     public boolean eliminarTarifa(Long id) {
-        Tarifa tarifa = tarifaDAO.buscarPorId(id);
+        Tarifa tarifa = tarifaDAO.obtenerPorId(id);
         if (tarifa != null) {
             tarifaDAO.eliminarTarifa(id);
             return true;
         }
         return false;
+    }
+    public Tarifa actualizarTarifa(Long id, Tarifa tarifa) {
+        return tarifaDAO.actualizarTarifa(id, tarifa);
     }
 }

@@ -32,7 +32,7 @@ public abstract class Usuario implements Serializable {
 
     @Id
     @Column(name = "uid", unique = true, nullable = false, length = 50)
-    private String uid;  // 🔹 Ahora el UID es la clave primaria
+    private String uid;  // Ahora el UID es la clave primaria
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -46,9 +46,8 @@ public abstract class Usuario implements Serializable {
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
 
-    // 🔹 Eliminamos el campo ID porque UID es la clave principal
 
-    // 🔹 Getters y Setters
+    //Getters y Setters
     public String getUid() {
         return uid;
     }
@@ -56,6 +55,16 @@ public abstract class Usuario implements Serializable {
     public void setUid(String uid) {
         this.uid = uid;
     }
+    @Transient // No se almacena en la BD, pero se usa en la lógica
+    public String getTipo_usuario() {
+        if (this instanceof UsuarioAdmin) {
+            return "ADMIN";
+        } else if (this instanceof UsuarioCliente) {
+            return "CLIENTE";
+        }
+        return "DESCONOCIDO";
+    }
+
 
     public String getNombre() {
         return nombre;

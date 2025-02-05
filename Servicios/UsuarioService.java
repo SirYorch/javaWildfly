@@ -99,6 +99,8 @@ public class UsuarioService {
             Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
 
             if (usuario == null) {
+                System.out.println(" Usuario no encontrado en la base de datos.");
+
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Usuario no encontrado")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -119,9 +121,6 @@ public class UsuarioService {
     }
 
 
-    /**
-     * Cambia el tipo de usuario entre ADMIN y CLIENTE.
-     */
     @PUT
     @Path("/cambiarTipo/{uid}/{tipo_usuario}")
     public Response cambiarTipoUsuario(@PathParam("uid") String uid, @PathParam("tipo_usuario") String nuevoTipo) {
@@ -134,20 +133,22 @@ public class UsuarioService {
                         .build();
             }
 
-            if (nuevoTipo.equalsIgnoreCase("ADMIN")) {
-                usuario = new UsuarioAdmin(usuario.getUid(), usuario.getNombre(), usuario.getTelefono(), usuario.getDireccion(), usuario.getCedula());
-            } else if (usuario instanceof UsuarioCliente) { // Verifica que sea un cliente antes de obtener placa
-                usuario = new UsuarioCliente(
+            if ("ADMIN".equalsIgnoreCase(nuevoTipo) && usuario instanceof UsuarioCliente) {
+                usuario = new UsuarioAdmin(
                         usuario.getUid(),
                         usuario.getNombre(),
                         usuario.getTelefono(),
                         usuario.getDireccion(),
-                        usuario.getCedula(),
-                        ((UsuarioCliente) usuario).getPlaca()
+                        usuario.getCedula()
                 );
+            } else if ("CLIENTE".equalsIgnoreCase(nuevoTipo) && usuario instanceof UsuarioAdmin) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity("No se puede convertir un ADMIN en CLIENTE automáticamente")
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
             } else {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("El usuario no puede ser convertido en CLIENTE, no es un cliente válido.")
+                        .entity("Tipo de usuario no válido")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
                         .build();
             }
@@ -164,14 +165,14 @@ public class UsuarioService {
                     .build();
         }
     }
+
     @PUT
     @Path("/{uid}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response actualizarUsuario(@PathParam("uid") String uid, Usuario usuarioActualizado) {
+    public Response actualizarUsuario(@PathParam("uid") String uid, Usuario usuario) {
         try {
             Usuario usuarioExistente = gestionUsuarios.obtenerUsuarioPorUid(uid);
-
             if (usuarioExistente == null) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Usuario no encontrado")
@@ -179,59 +180,43 @@ public class UsuarioService {
                         .build();
             }
 
-            // 🔹 Actualizar los datos generales
-            usuarioExistente.setNombre(usuarioActualizado.getNombre());
-            usuarioExistente.setTelefono(usuarioActualizado.getTelefono());
-            usuarioExistente.setDireccion(usuarioActualizado.getDireccion());
-            usuarioExistente.setCedula(usuarioActualizado.getCedula());
-
-            // 🔹 Si el usuario es un CLIENTE, actualizar la placa
-            if (usuarioExistente instanceof UsuarioCliente && usuarioActualizado instanceof UsuarioCliente) {
-                ((UsuarioCliente) usuarioExistente).setPlaca(((UsuarioCliente) usuarioActualizado).getPlaca());
+            // 🔹 Verificar si se quiere cambiar a ADMIN
+            if (usuario instanceof UsuarioAdmin && usuarioExistente instanceof UsuarioCliente) {
+                usuarioExistente = new UsuarioAdmin(
+                        usuario.getUid(),
+                        usuario.getNombre(),
+                        usuario.getTelefono(),
+                        usuario.getDireccion(),
+                        usuario.getCedula()
+                );
+            }
+            // 🔹 Si sigue siendo CLIENTE, validar la placa
+            else if (usuario instanceof UsuarioCliente && usuarioExistente instanceof UsuarioCliente) {
+                ((UsuarioCliente) usuarioExistente).setPlaca(((UsuarioCliente) usuario).getPlaca());
             }
 
-            // 🔹 Si se envió el cambio de tipo de usuario (ADMIN o CLIENTE)
-            if (!usuarioExistente.getClass().equals(usuarioActualizado.getClass())) {
-                if ("ADMIN".equalsIgnoreCase(usuarioActualizado.getClass().getSimpleName())) {
-                    usuarioExistente = new UsuarioAdmin(
-                            usuarioExistente.getUid(),
-                            usuarioExistente.getNombre(),
-                            usuarioExistente.getTelefono(),
-                            usuarioExistente.getDireccion(),
-                            usuarioExistente.getCedula()
-                    );
-                } else {
-                    usuarioExistente = new UsuarioCliente(
-                            usuarioExistente.getUid(),
-                            usuarioExistente.getNombre(),
-                            usuarioExistente.getTelefono(),
-                            usuarioExistente.getDireccion(),
-                            usuarioExistente.getCedula(),
-                            ((UsuarioCliente) usuarioActualizado).getPlaca()
-                    );
-                }
-            }
+            // 🔹 Actualizar información general
+            usuarioExistente.setNombre(usuario.getNombre());
+            usuarioExistente.setTelefono(usuario.getTelefono());
+            usuarioExistente.setDireccion(usuario.getDireccion());
+            usuarioExistente.setCedula(usuario.getCedula());
 
             // 🔹 Guardar cambios en la base de datos
             gestionUsuarios.actualizarUsuario(usuarioExistente);
 
             return Response.ok(usuarioExistente)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
-                    .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
                     .build();
-
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity("Error al actualizar usuario: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
-                    .header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-                    .header("Access-Control-Allow-Credentials", "true")
                     .build();
         }
     }
+
+
+
     @DELETE
     @Path("/{uid}")
     @Produces(MediaType.APPLICATION_JSON)

@@ -149,4 +149,34 @@ public class TarifaService {
                     .build();
         }
     }
+    @PUT
+    @Path("/{id}")
+    public Response actualizarTarifa(@PathParam("id") Long id, Tarifa tarifa) {
+        try {
+            Tarifa tarifaExistente = gestionTarifas.obtenerTarifaPorId(id);
+            if (tarifaExistente == null) {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Tarifa no encontrada")
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
+            }
+
+            // Actualizar valores
+            tarifaExistente.setDescripcion(tarifa.getDescripcion());
+            tarifaExistente.setPrecio(tarifa.getPrecio());
+
+            // Guardar en la base de datos
+            gestionTarifas.actualizarTarifa(id, tarifaExistente);
+
+            return Response.ok(tarifaExistente)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al actualizar tarifa: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
 }
