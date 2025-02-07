@@ -41,6 +41,8 @@ public class UsuarioService {
     @POST
     public Response crearUsuario(UsuarioCliente usuarioCliente) {
         try {
+            System.out.println(" Intentando crear usuario con UID: " + usuarioCliente.getUid());
+
             Usuario existente = gestionUsuarios.obtenerUsuarioPorUid(usuarioCliente.getUid());
             if (existente != null) {
                 return Response.status(Response.Status.CONFLICT)
@@ -64,6 +66,8 @@ public class UsuarioService {
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         } catch (Exception e) {
+            System.out.println(" Error al registrar usuario: " + e.getMessage());
+
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Error al crear el usuario: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
