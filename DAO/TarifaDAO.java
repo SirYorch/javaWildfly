@@ -7,6 +7,7 @@ import jakarta.transaction.Transactional;
 import ups.edu.parking.Objetos.Tarifa;
 import java.util.List;
 
+
 @ApplicationScoped
 public class TarifaDAO {
 
@@ -46,4 +47,6 @@ public class TarifaDAO {
         }
         return false;
     }
+
+
 }

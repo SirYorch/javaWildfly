@@ -32,4 +32,8 @@ public class GestionTickets {
     public void eliminarTicket(Long id) {
         ticketDAO.eliminarTicket(id);
     }
+
+    public List<Ticket> obtenerTicketsPorUsuario(String uid) {
+        return ticketDAO.obtenerTicketsPorUsuario(uid);
+    }
 }

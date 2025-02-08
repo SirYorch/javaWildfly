@@ -38,4 +38,5 @@ public class GestionTarifas {
     public Tarifa actualizarTarifa(Long id, Tarifa tarifa) {
         return tarifaDAO.actualizarTarifa(id, tarifa);
     }
+
 }

@@ -39,5 +39,11 @@ public class TicketDAO {
             em.remove(ticket);
         }
     }
+    public List<Ticket> obtenerTicketsPorUsuario(String uid) {
+        return em.createQuery(
+                        "SELECT t FROM Ticket t WHERE t.usuario.uid = :uid", Ticket.class)
+                .setParameter("uid", uid)
+                .getResultList();
+    }
 }
 
