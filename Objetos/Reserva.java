@@ -13,28 +13,35 @@ public class Reserva implements Serializable {
 
     public Reserva() {}
 
-    public Reserva(Long id, Ticket ticket, Date inicio, Usuario usuario) {
+    public Reserva(Long id, Ticket ticket, Date inicio,Lugar lugar) {
         this.id = id;
         this.ticket = ticket;
         this.inicio = inicio;
-        this.usuario = usuario;
+        this.lugar = lugar;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "ticket_id", nullable = false)
     private Ticket ticket;
 
     @Column(name = "inicio", nullable = false)
     private Date inicio;
 
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
+    }
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "lugar_id", nullable = false)
+    private Lugar lugar;
 
     // Getters y Setters
     public Long getId() {
@@ -59,14 +66,6 @@ public class Reserva implements Serializable {
 
     public void setInicio(Date inicio) {
         this.inicio = inicio;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
     }
 }
 

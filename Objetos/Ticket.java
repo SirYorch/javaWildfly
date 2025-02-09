@@ -13,12 +13,10 @@ public class Ticket implements Serializable {
 
     public Ticket() {}
 
-    public Ticket(Long id, Date inicio, Date fin, Usuario usuario, Date fechaInicio, Date fechaFin, double precio) {
+    public Ticket(Long id, Usuario usuario, Date fechaInicio, Date fechaFin, double precio) {
         this.id = id;
-        this.inicio = inicio;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.fin = fin;
         this.usuario = usuario;
         this.precio = precio;
     }
@@ -27,11 +25,6 @@ public class Ticket implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "inicio", nullable = false)
-    private Date inicio;
-
-    @Column(name = "fin", nullable = false)
-    private Date fin;
 
     @Column(name = "fechaInicio", nullable = false)
     private Date fechaInicio;
@@ -79,21 +72,6 @@ public class Ticket implements Serializable {
         this.id = id;
     }
 
-    public Date getInicio() {
-        return inicio;
-    }
-
-    public void setInicio(Date inicio) {
-        this.inicio = inicio;
-    }
-
-    public Date getFin() {
-        return fin;
-    }
-
-    public void setFin(Date fin) {
-        this.fin = fin;
-    }
 
     public Usuario getUsuario() {
         return usuario;

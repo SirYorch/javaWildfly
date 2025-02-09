@@ -14,12 +14,12 @@ public class GestionReservas {
     private ReservaDAO reservaDAO;
 
     public void crearReserva(Reserva reserva) {
+        //se crea tambien el ticket, con un precio de tarifa reducida, que no hemos colocado aun.
+        //se vincula la reserva con el ticket.
+
         reservaDAO.crearReserva(reserva);
     }
 
-    public Reserva obtenerReservaPorId(Long id) {
-        return reservaDAO.buscarPorId(id);
-    }
 
     public List<Reserva> listarReservas() {
         return reservaDAO.listarReservas();

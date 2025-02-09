@@ -21,7 +21,6 @@ public class Lugar implements Serializable {
         this.posicion = posicion;
     }
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "estado", nullable = false, length = 100)

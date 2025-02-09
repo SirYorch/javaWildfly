@@ -64,37 +64,7 @@ public class ReservaService {
         }
     }
 
-    /**
-     * Obtiene una reserva por ID.
-     */
-    @GET
-    @Path("/{id}")
-    @Operation(summary = "Obtener una reserva por ID", description = "Recupera una reserva específica mediante su ID.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Reserva encontrada",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Reserva.class))),
-            @APIResponse(responseCode = "404", description = "Reserva no encontrada")
-    })
-    public Response obtenerReservaPorId(@PathParam("id") Long id) {
-        try {
-            Reserva reserva = gestionReservas.obtenerReservaPorId(id);
-            if (reserva != null) {
-                return Response.ok(reserva)
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Reserva no encontrada")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al buscar la reserva: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
+
 
     /**
      * Lista todas las reservas registradas.

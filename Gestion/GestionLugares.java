@@ -24,5 +24,8 @@ public class GestionLugares {
         return lugarDAO.listarLugares();
     }
 
+    public Lugar cambiarEstado(Lugar lugar) {
+        return lugarDAO.actualizar(lugar);
+    }
 }
 

@@ -14,6 +14,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Lugar;
 import ups.edu.parking.Gestion.GestionLugares;
+import ups.edu.parking.Objetos.Usuario;
+import ups.edu.parking.Objetos.UsuarioAdmin;
+import ups.edu.parking.Objetos.UsuarioCliente;
 
 import java.util.List;
 
@@ -39,37 +42,6 @@ public class LugarService {
                 .build();
     }
 
-    /**
-     * Obtiene un lugar por ID.
-     */
-    @GET
-    @Path("/{id}")
-    @Operation(summary = "Obtener un lugar por ID", description = "Recupera un lugar específico mediante su ID.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Lugar encontrado",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Lugar.class))),
-            @APIResponse(responseCode = "404", description = "Lugar no encontrado")
-    })
-    public Response obtenerLugarPorId(@PathParam("id") Long id) {
-        try {
-            Lugar lugar = gestionLugares.obtenerLugarPorId(id);
-            if (lugar != null) {
-                return Response.ok(lugar)
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Lugar no encontrado")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al buscar el lugar: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
 
     /**
      * Lista todos los lugares registrados.
@@ -94,11 +66,23 @@ public class LugarService {
         }
     }
 
-    /**
-     * Crea un nuevo lugar.
-     */
-
-
+    @PUT
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuario(@PathParam("id") String id, Lugar lugar) {
+        try {
+            Lugar lugarEx = gestionLugares.cambiarEstado(lugar);
+            return Response.ok(lugarEx)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al actualizar usuario: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
 
 
 }

@@ -14,6 +14,9 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Horario;
 import ups.edu.parking.Gestion.GestionHorarios;
+import ups.edu.parking.Objetos.Usuario;
+import ups.edu.parking.Objetos.UsuarioAdmin;
+import ups.edu.parking.Objetos.UsuarioCliente;
 
 import java.util.List;
 
@@ -52,6 +55,7 @@ public class HorarioService {
     public Response crearHorario(Horario horario) {
         try {
             gestionHorarios.crearHorario(horario);
+
             return Response.status(Response.Status.CREATED)
                     .entity(horario)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -87,32 +91,32 @@ public class HorarioService {
         }
     }
 
-    /**
-     * Actualiza un horario existente.
-     */
     @PUT
-    @Operation(summary = "Actualizar un horario existente", description = "Modifica los datos de un horario registrado.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Horario actualizado exitosamente",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Horario.class))),
-            @APIResponse(responseCode = "404", description = "Horario no encontrado")
-    })
-    public Response actualizarHorario(Horario horario) {
+    @Path("/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuario(@PathParam("id") String id, Horario horario) {
         try {
-            boolean actualizado = gestionHorarios.actualizarHorario(horario);
-            if (actualizado) {
-                return Response.ok("Horario actualizado correctamente")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
+            Horario hor = gestionHorarios.obtenerHorarioPorId(Long.parseLong(id));
+            hor.setId(horario.getId());
+            hor.setFechaFin(horario.getFechaFin());
+            hor.setFechaInicio(horario.getFechaInicio());
+            hor.setNombre(horario.getNombre());
+
+            if (hor == null) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Horario no encontrado")
+                        .entity("Usuario no encontrado")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
                         .build();
             }
+            gestionHorarios.actualizarHorario(hor);
+
+            return Response.ok(hor)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al actualizar el horario: " + e.getMessage())
+                    .entity("Error al actualizar usuario: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         }

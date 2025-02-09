@@ -3,8 +3,7 @@ package ups.edu.parking.Objetos;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Time;
+import java.util.Date;
 
 @Entity
 @Table(name = "horarios")
@@ -14,13 +13,11 @@ public class Horario implements Serializable {
 
     public Horario() {}
 
-    public Horario(Long id, String nombre, Date fechaInicio, Date fechaFin, Time horaInicio, Time horaFin) {
+    public Horario(Long id, String nombre, Date fechaInicio, Date fechaFin) {
         this.id = id;
         this.nombre = nombre;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
-        this.horaInicio = horaInicio;
-        this.horaFin = horaFin;
     }
 
     @Id
@@ -36,11 +33,6 @@ public class Horario implements Serializable {
     @Column(name = "fecha_fin", nullable = false)
     private Date fechaFin;
 
-    @Column(name = "hora_inicio", nullable = false)
-    private Time horaInicio;
-
-    @Column(name = "hora_fin", nullable = false)
-    private Time horaFin;
 
     // Getters y Setters
     public Long getId() {
@@ -75,20 +67,5 @@ public class Horario implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public Time getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(Time horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public Time getHoraFin() {
-        return horaFin;
-    }
-
-    public void setHoraFin(Time horaFin) {
-        this.horaFin = horaFin;
-    }
 }
 

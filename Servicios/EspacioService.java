@@ -44,17 +44,44 @@ public class EspacioService {
     /**
      * Obtiene un espacio por ID.
      */
+    @PUT
+    @Operation(summary = "Actuaalizar valores de espacios", description = "actuaaliza valor de filas o columnas. y rehace lugares.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Espacio encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Espacio.class))),
+            @APIResponse(responseCode = "404", description = "Espacio no encontrado")
+    })
+    public Response actualizarDatos(Espacio espacio) {
+        try {
+            Espacio espacioex = gestionEspacios.actualizarDatos(espacio);
+            if (espacioex != null) {
+                return Response.ok(espacioex)
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND)
+                        .entity("Espacio no encontrado")
+                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                        .build();
+            }
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al buscar el espacio: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+
     @GET
-    @Path("/{id}")
     @Operation(summary = "Obtener un espacio por ID", description = "Recupera un espacio específico mediante su ID.")
     @APIResponses({
             @APIResponse(responseCode = "200", description = "Espacio encontrado",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Espacio.class))),
             @APIResponse(responseCode = "404", description = "Espacio no encontrado")
     })
-    public Response obtenerEspacioPorId(@PathParam("id") Long id) {
+    public Response obtenerEspacioPorId() {
         try {
-            Espacio espacio = gestionEspacios.obtenerEspacioPorId(id);
+            Espacio espacio = gestionEspacios.listarEspacios();
             if (espacio != null) {
                 return Response.ok(espacio)
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -73,82 +100,5 @@ public class EspacioService {
         }
     }
 
-    /**
-     * Lista todos los espacios registrados.
-     */
-    @GET
-    @Operation(summary = "Listar todos los espacios", description = "Obtiene una lista de todos los espacios registrados en el sistema.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Lista de espacios",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Espacio.class)))
-    })
-    public Response listarEspacios() {
-        try {
-            List<Espacio> espacios = gestionEspacios.listarEspacios();
-            return Response.ok(espacios)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al obtener la lista de espacios: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
 
-    /**
-     * Crea un nuevo espacio.
-     */
-    @POST
-    @Operation(summary = "Crear un nuevo espacio", description = "Registra un nuevo espacio en el sistema.")
-    @APIResponses({
-            @APIResponse(responseCode = "201", description = "Espacio creado exitosamente",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Espacio.class))),
-            @APIResponse(responseCode = "400", description = "Error al crear el espacio")
-    })
-    public Response crearEspacio(Espacio espacio) {
-        try {
-            gestionEspacios.crearEspacio(espacio);
-            return Response.status(Response.Status.CREATED)
-                    .entity(espacio)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Error al crear el espacio: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
-
-    /**
-     * Elimina un espacio por su ID.
-     */
-    @DELETE
-    @Path("/{id}")
-    @Operation(summary = "Eliminar un espacio", description = "Elimina un espacio registrado en el sistema mediante su ID.")
-    @APIResponses({
-            @APIResponse(responseCode = "204", description = "Espacio eliminado exitosamente"),
-            @APIResponse(responseCode = "404", description = "Espacio no encontrado")
-    })
-    public Response eliminarEspacio(@PathParam("id") Long id) {
-        try {
-            boolean eliminado = gestionEspacios.eliminarEspacio(id);
-            if (eliminado) {
-                return Response.status(Response.Status.NO_CONTENT)
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Espacio no encontrado")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al eliminar el espacio: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
 }
