@@ -54,6 +54,7 @@ public class LugarDAO {
 
     @Transactional
     public boolean eliminarLugares(int filas, int columnas) {
+        System.out.println("Se estan creando los lugares");
         for(Lugar lugar : listarLugares()) {
             em.remove(lugar);
         }
@@ -64,4 +65,19 @@ public class LugarDAO {
             return false;
         }
     }
+
+    @Transactional
+    public Lugar actualizarEntrar(Long id){
+        return em.find(Lugar.class, id);
+    };
+    public Lugar actualizarSalir(Long id){
+        return
+    };
+    public Lugar actualizarReservar(Long id){
+        return em.find(Lugar.class, id);
+    };
+    public Lugar actualizarArrendar(Long id){
+        return em.find(Lugar.class, id);
+    };
 }
+

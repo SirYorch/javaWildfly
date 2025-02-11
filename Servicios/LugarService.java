@@ -67,12 +67,63 @@ public class LugarService {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("entrar/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response actualizarUsuario(@PathParam("id") String id, Lugar lugar) {
+    public Response actualizarUsuarioEntrar(@PathParam("id") String id, Usuario usuario) {
         try {
-            Lugar lugarEx = gestionLugares.cambiarEstado(lugar);
+            Lugar lugarEx = gestionLugares.cambiarEstadoEntrar(usuario,Long.parseLong(id));
+            return Response.ok(lugarEx)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al actualizar usuario: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+    @PUT
+    @Path("reservar/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuarioReservar(@PathParam("id") String id, Usuario usuario) {
+        try {
+            Lugar lugarEx = gestionLugares.cambiarEstadoReservar(usuario,Long.parseLong(id));
+            return Response.ok(lugarEx)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al actualizar usuario: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+    @PUT
+    @Path("arrendar/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuarioArrendar(@PathParam("id") String id, Usuario usuario) {
+        try {
+            Lugar lugarEx = gestionLugares.cambiarEstadoSalir(usuario,Long.parseLong(id));
+            return Response.ok(lugarEx)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al actualizar usuario: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+    @PUT
+    @Path("salir/{id}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response actualizarUsuarioSalir(@PathParam("id") String id, Usuario usuario) {
+        try {
+            Lugar lugarEx = gestionLugares.cambiarEstadoReservar(usuario,Long.parseLong(id));
             return Response.ok(lugarEx)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();

@@ -3,7 +3,7 @@ package ups.edu.parking.Objetos;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "arriendos")

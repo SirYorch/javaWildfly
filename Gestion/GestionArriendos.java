@@ -15,6 +15,9 @@ public class GestionArriendos {
     private ArriendoDAO arriendoDAO;
 
     public void crearArriendo(Arriendo arriendo) {
+        //se crea un ticket para el arriendo
+
+
         arriendoDAO.crearArriendo(arriendo);
     }
 

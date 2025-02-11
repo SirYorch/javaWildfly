@@ -22,12 +22,13 @@ public abstract class Usuario implements Serializable {
 
     public Usuario() {}
 
-    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula) {
+    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula,String correo) {
         this.uid = uid;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.cedula = cedula;
+        this.correo= correo;
     }
 
     @Id
@@ -46,6 +47,32 @@ public abstract class Usuario implements Serializable {
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
 
+
+    @Column(name = "correo", nullable = false, unique = true, length = 10)
+    private String correo;
+
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    @OneToOne
+    @JoinColumn(name = "lugar_id", nullable = true)
+    private Lugar lugar;
+
+
+
+    public Lugar getLugar() {
+        return lugar;
+    }
+
+    public void setLugar(Lugar lugar) {
+        this.lugar = lugar;
+    }
 
     //Getters y Setters
     public String getUid() {
