@@ -41,8 +41,6 @@ public class UsuarioService {
     @POST
     public Response crearUsuario(UsuarioCliente usuarioCliente) {
         try {
-            System.out.println(" Intentando crear usuario con UID: " + usuarioCliente.getUid());
-
             Usuario existente = gestionUsuarios.obtenerUsuarioPorUid(usuarioCliente.getUid());
             if (existente != null) {
                 return Response.status(Response.Status.CONFLICT)
@@ -57,8 +55,11 @@ public class UsuarioService {
                     usuarioCliente.getTelefono(),
                     usuarioCliente.getDireccion(),
                     usuarioCliente.getCedula(),
-                    usuarioCliente.getPlaca()
+                    usuarioCliente.getPlaca(),
+                    usuarioCliente.getCorreo(),
+                    usuarioCliente.isReservado()
             );
+            nuevoUsuario.setReservado(false);
 
             gestionUsuarios.crearUsuario(nuevoUsuario);
             return Response.status(Response.Status.CREATED)
@@ -66,8 +67,6 @@ public class UsuarioService {
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
         } catch (Exception e) {
-            System.out.println(" Error al registrar usuario: " + e.getMessage());
-
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity("Error al crear el usuario: " + e.getMessage())
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -101,10 +100,7 @@ public class UsuarioService {
     public Response obtenerUsuarioPorUid(@PathParam("uid") String uid) {
         try {
             Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
-
             if (usuario == null) {
-                System.out.println(" Usuario no encontrado en la base de datos.");
-
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Usuario no encontrado")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -143,7 +139,10 @@ public class UsuarioService {
                         usuario.getNombre(),
                         usuario.getTelefono(),
                         usuario.getDireccion(),
-                        usuario.getCedula()
+                        usuario.getCedula(),
+                        usuario.getCorreo(),
+                        usuario.isReservado()
+
                 );
             } else if ("CLIENTE".equalsIgnoreCase(nuevoTipo) && usuario instanceof UsuarioAdmin) {
                 return Response.status(Response.Status.BAD_REQUEST)
@@ -177,6 +176,7 @@ public class UsuarioService {
     public Response actualizarUsuario(@PathParam("uid") String uid, Usuario usuario) {
         try {
             Usuario usuarioExistente = gestionUsuarios.obtenerUsuarioPorUid(uid);
+
             if (usuarioExistente == null) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Usuario no encontrado")
@@ -184,28 +184,6 @@ public class UsuarioService {
                         .build();
             }
 
-            // 🔹 Verificar si se quiere cambiar a ADMIN
-            if (usuario instanceof UsuarioAdmin && usuarioExistente instanceof UsuarioCliente) {
-                usuarioExistente = new UsuarioAdmin(
-                        usuario.getUid(),
-                        usuario.getNombre(),
-                        usuario.getTelefono(),
-                        usuario.getDireccion(),
-                        usuario.getCedula()
-                );
-            }
-            // 🔹 Si sigue siendo CLIENTE, validar la placa
-            else if (usuario instanceof UsuarioCliente && usuarioExistente instanceof UsuarioCliente) {
-                ((UsuarioCliente) usuarioExistente).setPlaca(((UsuarioCliente) usuario).getPlaca());
-            }
-
-            // 🔹 Actualizar información general
-            usuarioExistente.setNombre(usuario.getNombre());
-            usuarioExistente.setTelefono(usuario.getTelefono());
-            usuarioExistente.setDireccion(usuario.getDireccion());
-            usuarioExistente.setCedula(usuario.getCedula());
-
-            // 🔹 Guardar cambios en la base de datos
             gestionUsuarios.actualizarUsuario(usuarioExistente);
 
             return Response.ok(usuarioExistente)
@@ -219,8 +197,6 @@ public class UsuarioService {
         }
     }
 
-
-
     @DELETE
     @Path("/{uid}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -233,7 +209,6 @@ public class UsuarioService {
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
                         .build();
             }
-
             gestionUsuarios.eliminarUsuario(uid);
 
             return Response.ok("Usuario eliminado correctamente")

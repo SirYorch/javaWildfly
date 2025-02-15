@@ -39,31 +39,6 @@ public class ReservaService {
                 .build();
     }
 
-    /**
-     * Crea una nueva reserva.
-     */
-    @POST
-    @Operation(summary = "Crear una nueva reserva", description = "Registra una nueva reserva en el sistema.")
-    @APIResponses({
-            @APIResponse(responseCode = "201", description = "Reserva creada exitosamente",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Reserva.class))),
-            @APIResponse(responseCode = "400", description = "Error al crear la reserva")
-    })
-    public Response crearReserva(Reserva reserva) {
-        try {
-            gestionReservas.crearReserva(reserva);
-            return Response.status(Response.Status.CREATED)
-                    .entity(reserva)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Error al crear la reserva: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
-
 
 
     /**

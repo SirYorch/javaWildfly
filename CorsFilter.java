@@ -14,7 +14,6 @@ public class CorsFilter implements Filter {
             throws IOException, ServletException {
         HttpServletResponse res = (HttpServletResponse) response;
         HttpServletRequest req = (HttpServletRequest) request;
-        System.out.println("CORS Filter ejecutándose..."); // Agrega esta línea
 
         // Configurar los encabezados de CORS
         res.setHeader("Access-Control-Allow-Origin", "*"); // Especifica el frontend

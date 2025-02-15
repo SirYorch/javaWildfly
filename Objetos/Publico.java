@@ -25,7 +25,7 @@ public class Publico implements Serializable {
     @Column(name = "Salida2", nullable = false)
     private Date fechaFin2;
 
-    @Column(name = "motd", nullable = false)
+    @Column(name = "motd", nullable = false, length = 500)
     private String motd;
 
     public Date getFechaInicio1() {

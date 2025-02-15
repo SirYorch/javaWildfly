@@ -13,8 +13,8 @@ public class UsuarioCliente extends Usuario {
 
     public UsuarioCliente() {}
 
-    public UsuarioCliente(String uid, String nombre, String telefono, String direccion, String cedula, String placa) {
-        super(uid, nombre, telefono, direccion, cedula);
+    public UsuarioCliente(String uid, String nombre, String telefono, String direccion, String cedula, String placa,String correo,boolean reservado) {
+        super(uid, nombre, telefono, direccion, cedula,correo,reservado);
         this.placa = placa;
     }
 

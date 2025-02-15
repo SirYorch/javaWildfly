@@ -4,15 +4,23 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
+import ups.edu.parking.Objetos.Lugar;
 import ups.edu.parking.Objetos.Usuario;
+import ups.edu.parking.Servicios.UsuarioService;
 
 import java.util.List;
 
 @ApplicationScoped
 public class UsuarioDAO {
 
+//    private final UsuarioService usuarioService;
     @PersistenceContext(unitName = "PostgresPU")
     private EntityManager em;
+
+//    @jakarta.inject.Inject
+//    public UsuarioDAO(UsuarioService usuarioService) {
+//        this.usuarioService = usuarioService;
+//    }
 
     @Transactional
     public void crearUsuario(Usuario usuario) {
@@ -24,17 +32,17 @@ public class UsuarioDAO {
         }
     }
     public Usuario buscarPorUid(String uid) {
-        System.out.println(" Ejecutando consulta en la base de datos para UID: " + uid);
+
         List<Usuario> usuarios = em.createQuery(
                         "SELECT u FROM Usuario u WHERE u.uid = :uid", Usuario.class)
                 .setParameter("uid", uid)
                 .getResultList();
 
         if (usuarios.isEmpty()) {
-            System.out.println(" Usuario no encontrado en la base de datos.");
+
             return null;
         } else {
-            System.out.println(" Usuario encontrado en la base de datos: " + usuarios.get(0).getNombre());
+
             return usuarios.get(0);
         }
     }
@@ -62,7 +70,9 @@ public class UsuarioDAO {
                             usuario.getNombre(),
                             usuario.getTelefono(),
                             usuario.getDireccion(),
-                            usuario.getCedula()
+                            usuario.getCedula(),
+                            usuario.getCorreo(),
+                            usuario.isReservado()
                     );
                 } else {
                     usuarioExistente = new ups.edu.parking.Objetos.UsuarioCliente(
@@ -71,7 +81,9 @@ public class UsuarioDAO {
                             usuario.getTelefono(),
                             usuario.getDireccion(),
                             usuario.getCedula(),
-                            ((ups.edu.parking.Objetos.UsuarioCliente) usuario).getPlaca()
+                            usuario.getCorreo(),
+                            ((ups.edu.parking.Objetos.UsuarioCliente) usuario).getPlaca(),
+                            usuario.isReservado()
                     );
                 }
 
@@ -114,4 +126,47 @@ public class UsuarioDAO {
         }
     }
 
+
+
+    @Transactional
+    public Usuario actualizarUsuarioEntrar(Lugar lugar, Usuario usuarioc) {
+        Usuario usuario = buscarPorUid(usuarioc.getUid());
+        if (usuario != null) {
+            usuario.setLugar(lugar);
+            usuario.setReservado(false);
+            return em.merge(usuario);
+        } else {
+        return null;}
+    }
+
+    @Transactional
+    public Usuario actualizarUsuarioReservar(Lugar lugar, Usuario usuarioc) {
+        Usuario usuario = buscarPorUid(usuarioc.getUid());
+        if (usuario != null) {
+            usuario.setLugar(lugar);
+            usuario.setReservado(true);
+            return em.merge(usuario);
+        } else {
+            return null;}
+    }
+
+    @Transactional
+    public Usuario actualizarUsuarioSalir(Usuario usuarioc) {
+        System.out.println(usuarioc.getUid());
+        Usuario usuario = buscarPorUid(usuarioc.getUid());
+        System.out.println(usuario.getNombre());
+        if (usuario != null) {
+            usuario.setLugar(null);
+            return em.merge(usuario);
+        } else {
+            return null;}
+    }
+
+
+    @Transactional
+    public void eliminarReservacion(Usuario usuario) {
+        usuario.setReservado(false);
+        usuario.setLugar(null);
+        em.merge(usuario);
+    }
 }

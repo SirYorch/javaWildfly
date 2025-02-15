@@ -31,7 +31,8 @@ public class TarifaDAO {
     public Tarifa actualizarTarifa(Long id, Tarifa nuevaTarifa) {
         Tarifa tarifa = obtenerPorId(id);
         if (tarifa != null) {
-            tarifa.setDescripcion(nuevaTarifa.getDescripcion());
+            tarifa.setDesde(nuevaTarifa.getDesde());
+            tarifa.setHasta(nuevaTarifa.getHasta());
             tarifa.setPrecio(nuevaTarifa.getPrecio());
             return em.merge(tarifa);
         }

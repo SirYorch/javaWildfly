@@ -162,7 +162,8 @@ public class TarifaService {
             }
 
             // Actualizar valores
-            tarifaExistente.setDescripcion(tarifa.getDescripcion());
+            tarifaExistente.setHasta(tarifa.getHasta());
+            tarifaExistente.setDesde(tarifa.getDesde());
             tarifaExistente.setPrecio(tarifa.getPrecio());
 
             // Guardar en la base de datos

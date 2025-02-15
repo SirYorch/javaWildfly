@@ -22,13 +22,15 @@ public abstract class Usuario implements Serializable {
 
     public Usuario() {}
 
-    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula,String correo) {
+
+    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula,String correo,boolean reservado) {
         this.uid = uid;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.cedula = cedula;
         this.correo= correo;
+        this.reservado = reservado;
     }
 
     @Id
@@ -48,8 +50,19 @@ public abstract class Usuario implements Serializable {
     private String cedula;
 
 
-    @Column(name = "correo", nullable = false, unique = true, length = 10)
+    public boolean isReservado() {
+        return reservado;
+    }
+
+    public void setReservado(boolean reservado) {
+        this.reservado = reservado;
+    }
+
+    @Column(name = "correo", nullable = false, unique = true, length = 100)
     private String correo;
+
+    @Column(name = "reservado", nullable = true)
+    private boolean reservado;
 
 
     public String getCorreo() {

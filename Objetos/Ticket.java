@@ -3,7 +3,7 @@ package ups.edu.parking.Objetos;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 
 @Entity
 @Table(name = "tickets")
@@ -29,7 +29,7 @@ public class Ticket implements Serializable {
     @Column(name = "fechaInicio", nullable = false)
     private Date fechaInicio;
 
-    @Column(name = "fechaFin", nullable = false)
+    @Column(name = "fechaFin", nullable = true)
     private Date fechaFin;
 
     @Column(name = "precio", nullable = false)

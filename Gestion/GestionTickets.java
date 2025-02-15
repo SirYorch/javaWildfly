@@ -34,6 +34,6 @@ public class GestionTickets {
     }
 
     public List<Ticket> obtenerTicketsPorUsuario(String uid) {
-        return ticketDAO.obtenerTicketsPorUsuario(uid);
+        return ticketDAO.listarTicketsUsuario(uid);
     }
 }

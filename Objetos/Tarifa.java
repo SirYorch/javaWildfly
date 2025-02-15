@@ -11,25 +11,47 @@ public class Tarifa implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "descripcion", nullable = false, length = 50)
-    private String descripcion;
+//    @Column(name = "descripcion", nullable = false, length = 50)
+//    private String descripcion;
+
+
+    @Column(name = "desde", nullable = false)
+    private int desde;
+
+
+    @Column(name = "hasta", nullable = false)
+    private int hasta;
+
 
     @Column(name = "precio", nullable = false)
     private double precio;
 
-    public Tarifa() {}
-
-    public Tarifa(String descripcion, double precio) {
-        this.descripcion = descripcion;
-        this.precio = precio;
+    public int getDesde() {
+        return desde;
     }
 
+    public void setDesde(int desde) {
+        this.desde = desde;
+    }
+
+    public int getHasta() {
+        return hasta;
+    }
+
+    public void setHasta(int hasta) {
+        this.hasta = hasta;
+    }
+
+    public Tarifa() {}
+
+    public Tarifa(int desde, int hasta, double precio) {
+        this.desde = desde;
+        this.hasta = hasta;
+        this.precio = precio;
+    }
     // Getters y Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
     public double getPrecio() { return precio; }
     public void setPrecio(double precio) { this.precio = precio; }

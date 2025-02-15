@@ -68,16 +68,37 @@ public class LugarDAO {
 
     @Transactional
     public Lugar actualizarEntrar(Long id){
-        return em.find(Lugar.class, id);
+        Lugar l = em.find(Lugar.class, id);
+        l.setEstado("ocupado");
+        return em.merge(l);
     };
+
+
+    @Transactional
     public Lugar actualizarSalir(Long id){
-        return
+        Lugar l = em.find(Lugar.class, id);
+        l.setEstado("disponible");
+        return em.merge(l);
     };
+
+    @Transactional
     public Lugar actualizarReservar(Long id){
-        return em.find(Lugar.class, id);
+        Lugar l = em.find(Lugar.class, id);
+        l.setEstado("reservado");
+        return em.merge(l);
     };
+
+    @Transactional
     public Lugar actualizarArrendar(Long id){
-        return em.find(Lugar.class, id);
+        Lugar l = em.find(Lugar.class, id);
+        l.setEstado("arrendado");
+        return em.merge(l);
     };
+
+    @Transactional
+    public void eliminarReservacion(Lugar lugar) {
+        lugar.setEstado("disponible");
+        em.merge(lugar);
+    }
 }
 

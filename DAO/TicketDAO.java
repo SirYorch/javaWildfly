@@ -23,8 +23,17 @@ public class TicketDAO {
         return em.find(Ticket.class, id);
     }
 
+
+
     public List<Ticket> listarTickets() {
-        return em.createQuery("SELECT t FROM Ticket t", Ticket.class).getResultList();
+        return em.createQuery("SELECT t FROM Ticket t where t.fechaFin is not null", Ticket.class).getResultList();
+    }
+
+    public List<Ticket> listarTicketsUsuario(String uid) {
+        return em.createQuery(
+                        "SELECT t FROM Ticket t WHERE t.usuario.uid = :uid and t.fechaFin is not null", Ticket.class)
+                .setParameter("uid", uid)
+                .getResultList();
     }
 
     @Transactional

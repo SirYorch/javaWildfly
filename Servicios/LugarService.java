@@ -67,7 +67,7 @@ public class LugarService {
     }
 
     @PUT
-    @Path("entrar/{id}")
+    @Path("/entrar/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response actualizarUsuarioEntrar(@PathParam("id") String id, Usuario usuario) {
@@ -84,7 +84,7 @@ public class LugarService {
         }
     }
     @PUT
-    @Path("reservar/{id}")
+    @Path("/reservar/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response actualizarUsuarioReservar(@PathParam("id") String id, Usuario usuario) {
@@ -101,12 +101,12 @@ public class LugarService {
         }
     }
     @PUT
-    @Path("arrendar/{id}")
+    @Path("/arrendar/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response actualizarUsuarioArrendar(@PathParam("id") String id, Usuario usuario) {
         try {
-            Lugar lugarEx = gestionLugares.cambiarEstadoSalir(usuario,Long.parseLong(id));
+            Lugar lugarEx = gestionLugares.cambiarEstadoReservar(usuario,Long.parseLong(id));
             return Response.ok(lugarEx)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
@@ -118,12 +118,13 @@ public class LugarService {
         }
     }
     @PUT
-    @Path("salir/{id}")
+    @Path("/salir")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response actualizarUsuarioSalir(@PathParam("id") String id, Usuario usuario) {
+    public Response actualizarUsuarioSalir(Usuario usuario) {
         try {
-            Lugar lugarEx = gestionLugares.cambiarEstadoReservar(usuario,Long.parseLong(id));
+            Lugar lugarEx = gestionLugares.cambiarEstadoSalir(usuario);
+
             return Response.ok(lugarEx)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();

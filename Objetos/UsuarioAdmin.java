@@ -9,7 +9,7 @@ public class UsuarioAdmin extends Usuario {
 
     public UsuarioAdmin() {}
 
-    public UsuarioAdmin(String uid, String nombre, String telefono, String direccion, String cedula) {
-        super(uid, nombre, telefono, direccion, cedula);
+    public UsuarioAdmin(String uid, String nombre, String telefono, String direccion, String cedula,String correo,boolean reservado) {
+        super(uid, nombre, telefono, direccion, cedula,correo,reservado);
     }
 }
