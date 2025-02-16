@@ -14,9 +14,6 @@ import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Horario;
 import ups.edu.parking.Gestion.GestionHorarios;
-import ups.edu.parking.Objetos.Usuario;
-import ups.edu.parking.Objetos.UsuarioAdmin;
-import ups.edu.parking.Objetos.UsuarioCliente;
 
 import java.util.List;
 

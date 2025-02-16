@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import ups.edu.parking.Objetos.Reserva;
+import ups.edu.parking.Objetos.Ticket;
+import ups.edu.parking.Objetos.Usuario;
 
 import java.util.List;
 
@@ -31,6 +33,31 @@ public class ReservaDAO {
     public void eliminarReserva(Long id) {
         Reserva reserva = em.find(Reserva.class, id);
         if (reserva != null) {
+            em.remove(reserva);
+        }
+    }
+
+    @Transactional
+    public void eliminarReservas() {
+        List<Reserva> reservas = listarReservas();
+        for (Reserva reserva : reservas) {
+            em.remove(reserva);
+        }
+    }
+
+    public List<Reserva> listarReservasUsuario(Usuario usuario) {
+
+        return em.createQuery("SELECT r FROM Reserva r WHERE r.id = :Reserva_id", Reserva.class)
+                .setParameter("Reserva_id", usuario.getReserva().getId())
+                .getResultList();
+
+    }
+
+    public void eliminarReservasUsuario(Usuario usuario) {
+        List<Reserva> reservas = em.createQuery("SELECT r FROM Reserva r WHERE r.id = :Reserva_id", Reserva.class)
+                .setParameter("Reserva_id", usuario.getReserva().getId())
+                .getResultList();
+        for (Reserva reserva : reservas) {
             em.remove(reserva);
         }
     }

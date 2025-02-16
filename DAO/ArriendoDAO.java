@@ -39,5 +39,13 @@ public class ArriendoDAO {
             em.remove(arriendo);
         }
     }
+
+    @Transactional
+    public void eliminarArriendos() {
+        List<Arriendo> arriendos = listarArriendos();
+        for (Arriendo arriendo : arriendos) {
+            em.remove(arriendo);
+        }
+    }
 }
 

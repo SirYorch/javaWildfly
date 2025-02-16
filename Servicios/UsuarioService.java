@@ -7,8 +7,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Usuario;
-import ups.edu.parking.Objetos.UsuarioAdmin;
-import ups.edu.parking.Objetos.UsuarioCliente;
 import ups.edu.parking.Gestion.GestionUsuarios;
 
 import java.util.List;
@@ -39,7 +37,7 @@ public class UsuarioService {
      * Crea un nuevo usuario en la base de datos.
      */
     @POST
-    public Response crearUsuario(UsuarioCliente usuarioCliente) {
+    public Response crearUsuario(Usuario usuarioCliente) {
         try {
             Usuario existente = gestionUsuarios.obtenerUsuarioPorUid(usuarioCliente.getUid());
             if (existente != null) {
@@ -49,7 +47,7 @@ public class UsuarioService {
                         .build();
             }
 
-            UsuarioCliente nuevoUsuario = new UsuarioCliente(
+            Usuario nuevoUsuario = new Usuario(
                     usuarioCliente.getUid(),
                     usuarioCliente.getNombre(),
                     usuarioCliente.getTelefono(),
@@ -57,9 +55,9 @@ public class UsuarioService {
                     usuarioCliente.getCedula(),
                     usuarioCliente.getPlaca(),
                     usuarioCliente.getCorreo(),
-                    usuarioCliente.isReservado()
+                    null,
+                    "CLIENTE"
             );
-            nuevoUsuario.setReservado(false);
 
             gestionUsuarios.crearUsuario(nuevoUsuario);
             return Response.status(Response.Status.CREATED)
@@ -81,6 +79,7 @@ public class UsuarioService {
     public Response obtenerUsuarios() {
         try {
             List<Usuario> usuarios = gestionUsuarios.listarUsuarios();
+            System.out.println(usuarios);
             return Response.ok(usuarios)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();
@@ -120,55 +119,6 @@ public class UsuarioService {
         }
     }
 
-
-    @PUT
-    @Path("/cambiarTipo/{uid}/{tipo_usuario}")
-    public Response cambiarTipoUsuario(@PathParam("uid") String uid, @PathParam("tipo_usuario") String nuevoTipo) {
-        try {
-            Usuario usuario = gestionUsuarios.obtenerUsuarioPorUid(uid);
-            if (usuario == null) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity("Usuario no encontrado")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
-
-            if ("ADMIN".equalsIgnoreCase(nuevoTipo) && usuario instanceof UsuarioCliente) {
-                usuario = new UsuarioAdmin(
-                        usuario.getUid(),
-                        usuario.getNombre(),
-                        usuario.getTelefono(),
-                        usuario.getDireccion(),
-                        usuario.getCedula(),
-                        usuario.getCorreo(),
-                        usuario.isReservado()
-
-                );
-            } else if ("CLIENTE".equalsIgnoreCase(nuevoTipo) && usuario instanceof UsuarioAdmin) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("No se puede convertir un ADMIN en CLIENTE automáticamente")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            } else {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity("Tipo de usuario no válido")
-                        .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                        .build();
-            }
-
-            gestionUsuarios.actualizarUsuario(usuario);
-
-            return Response.ok("Tipo de usuario actualizado correctamente")
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al cambiar el tipo de usuario: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
-
     @PUT
     @Path("/{uid}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -176,16 +126,21 @@ public class UsuarioService {
     public Response actualizarUsuario(@PathParam("uid") String uid, Usuario usuario) {
         try {
             Usuario usuarioExistente = gestionUsuarios.obtenerUsuarioPorUid(uid);
-
             if (usuarioExistente == null) {
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Usuario no encontrado")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
                         .build();
+            } else {
+
+                usuarioExistente.setNombre(usuario.getNombre());
+                usuarioExistente.setTelefono(usuario.getTelefono());
+                usuarioExistente.setDireccion(usuario.getDireccion());
+                usuarioExistente.setCedula(usuario.getCedula());
+                usuarioExistente.setStat(usuario.getStat());
+                usuarioExistente.setPlaca(usuario.getPlaca());
+                gestionUsuarios.actualizarUsuario(usuarioExistente);
             }
-
-            gestionUsuarios.actualizarUsuario(usuarioExistente);
-
             return Response.ok(usuarioExistente)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
                     .build();

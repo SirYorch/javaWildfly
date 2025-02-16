@@ -53,12 +53,15 @@ public class EspacioService {
     })
     public Response actualizarDatos(Espacio espacio) {
         try {
+            System.out.println("Intento de actualizar");
             Espacio espacioex = gestionEspacios.actualizarDatos(espacio);
             if (espacioex != null) {
+                System.out.println("Se encuentra");
                 return Response.ok(espacioex)
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")
                         .build();
             } else {
+                System.out.println("no se encuentra");
                 return Response.status(Response.Status.NOT_FOUND)
                         .entity("Espacio no encontrado")
                         .header("Access-Control-Allow-Origin", "http://localhost:4200")

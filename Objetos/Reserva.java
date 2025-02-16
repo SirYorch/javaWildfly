@@ -13,9 +13,8 @@ public class Reserva implements Serializable {
 
     public Reserva() {}
 
-    public Reserva(Long id, Ticket ticket, Date inicio,Lugar lugar) {
+    public Reserva(Long id, Date inicio,Lugar lugar) {
         this.id = id;
-        this.ticket = ticket;
         this.inicio = inicio;
         this.lugar = lugar;
     }
@@ -23,10 +22,6 @@ public class Reserva implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    @JoinColumn(name = "ticket_id", nullable = false)
-    private Ticket ticket;
 
     @Column(name = "inicio", nullable = false)
     private Date inicio;
@@ -50,14 +45,6 @@ public class Reserva implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Ticket getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Ticket ticket) {
-        this.ticket = ticket;
     }
 
     public Date getInicio() {

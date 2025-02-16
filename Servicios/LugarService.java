@@ -15,8 +15,6 @@ import jakarta.ws.rs.core.Context;
 import ups.edu.parking.Objetos.Lugar;
 import ups.edu.parking.Gestion.GestionLugares;
 import ups.edu.parking.Objetos.Usuario;
-import ups.edu.parking.Objetos.UsuarioAdmin;
-import ups.edu.parking.Objetos.UsuarioCliente;
 
 import java.util.List;
 

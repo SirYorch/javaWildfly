@@ -1,41 +1,52 @@
 package ups.edu.parking.Objetos;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import java.io.Serializable;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonSubTypes;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "tipo_usuario")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = UsuarioAdmin.class, name = "ADMIN"),
-        @JsonSubTypes.Type(value = UsuarioCliente.class, name = "CLIENTE")
-})
-@JsonIgnoreProperties(ignoreUnknown = true) // Evita errores con campos desconocidos
+
 @Entity
 @Table(name = "usuarios")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_usuario", discriminatorType = DiscriminatorType.STRING)
-public abstract class Usuario implements Serializable {
+public class Usuario implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     public Usuario() {}
 
 
-    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula,String correo,boolean reservado) {
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
+    public void setPlaca(String placa) {
+        this.placa = placa;
+    }
+
+    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula, String placa, String correo, Reserva reserva, String stat) {
         this.uid = uid;
         this.nombre = nombre;
         this.telefono = telefono;
         this.direccion = direccion;
         this.cedula = cedula;
+        this.placa = placa;
         this.correo= correo;
-        this.reservado = reservado;
+        this.stat = stat;
+        this.reserva = reserva;
     }
 
     @Id
     @Column(name = "uid", unique = true, nullable = false, length = 50)
     private String uid;  // Ahora el UID es la clave primaria
+
+    public String getStat() {
+        return stat;
+    }
+
+    public void setStat(String stat) {
+        this.stat = stat;
+    }
+
+    @Column(name = "stat", nullable = false, length = 7)
+    private String stat;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -49,20 +60,20 @@ public abstract class Usuario implements Serializable {
     @Column(name = "cedula", nullable = false, unique = true, length = 10)
     private String cedula;
 
-
-    public boolean isReservado() {
-        return reservado;
+    public Reserva getReserva() {
+        return reserva;
     }
 
-    public void setReservado(boolean reservado) {
-        this.reservado = reservado;
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
     }
 
     @Column(name = "correo", nullable = false, unique = true, length = 100)
     private String correo;
 
-    @Column(name = "reservado", nullable = true)
-    private boolean reservado;
+    @OneToOne
+    @JoinColumn(name = "reserva_id", nullable = true)
+    private Reserva reserva;
 
 
     public String getCorreo() {
@@ -91,20 +102,13 @@ public abstract class Usuario implements Serializable {
     public String getUid() {
         return uid;
     }
+    
+    @Column(name = "placa", nullable = true, length = 15)
+    private String placa;
 
-    public void setUid(String uid) {
-        this.uid = uid;
+    public String getPlaca() {
+        return placa;
     }
-    @Transient // No se almacena en la BD, pero se usa en la lógica
-    public String getTipo_usuario() {
-        if (this instanceof UsuarioAdmin) {
-            return "ADMIN";
-        } else if (this instanceof UsuarioCliente) {
-            return "CLIENTE";
-        }
-        return "DESCONOCIDO";
-    }
-
 
     public String getNombre() {
         return nombre;

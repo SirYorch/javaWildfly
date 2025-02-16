@@ -35,27 +35,33 @@ public class GestionReservas {
     }
 
 
+    public List<Reserva> listarReservaUsuario(Usuario usuario) {
+        return reservaDAO.listarReservasUsuario(usuario);
+    }
+
     public List<Reserva> listarReservas() {
         return reservaDAO.listarReservas();
     }
 
-    public boolean eliminarReserva(Long id) {
-        Reserva reserva = reservaDAO.buscarPorId(id);
+    public boolean eliminarReservas(Usuario usuario) {
+        Reserva reserva = reservaDAO.buscarPorId(usuario.getReserva().getId());
         if (reserva != null) {
-            reservaDAO.eliminarReserva(id);
+            reservaDAO.eliminarReserva(usuario.getReserva().getId());
 
             //eliminacion de reserva en el usuario
-            usuarioDAO.eliminarReservacion(reserva.getTicket().getUsuario());
+            usuarioDAO.eliminarReservacion(usuario);
 
 
             //cambio de estado de reserva en el Lugar
             lugarDAO.eliminarReservacion(reserva.getLugar());
 
-            //eliminar Ticket
-            ticketDAO.eliminarTicket(reserva.getTicket().getId());
 
             return true;
         }
+        return false;
+    }
+
+    public boolean eliminarReserva(Long id) {
         return false;
     }
 }

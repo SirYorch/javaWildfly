@@ -39,10 +39,17 @@ public class GestionLugares {
 
     public Lugar cambiarEstadoEntrar(Usuario usuario, Long id) {
         Lugar l = lugarDAO.actualizarEntrar(id);
-        usuarioDAO.actualizarUsuarioEntrar(l,usuario);
+        try{
+            Reserva reser = usuario.getReserva();
+        if (reser != null) {
+            usuarioDAO.actualizarUsuarioEntrar(l,usuario,true);
+            reservaDAO.eliminarReserva(reser.getId());
+        } else if( reser == null){
+            usuarioDAO.actualizarUsuarioEntrar(l,usuario,false);
+        }
 
         List<Ticket> tickets = ticketDAO.obtenerTicketsPorUsuario(usuario.getUid());
-        try{
+
             Ticket t = tickets.get(tickets.size() - 1);
             if(t.getFechaFin() == null) {
                 ticketDAO.actualizarTicket(t);
@@ -81,22 +88,18 @@ public class GestionLugares {
 
 
             for(Tarifa tarifa : tarifas) {
-                System.out.println(cantidadTiempo);
-                System.out.println(tarifa.getDesde());
-                System.out.println(tarifa.getHasta());
                 if(cantidadTiempo >= Double.parseDouble(tarifa.getDesde()+"") && cantidadTiempo <Double.parseDouble(tarifa.getHasta()+"")) {
-
                     t.setPrecio(t.getPrecio()+  tarifa.getPrecio());
-                    System.out.println(t.getPrecio());
                     ticketDAO.actualizarTicket(t);
                     break;
                 }
             }
+
+            usuarioDAO.actualizarUsuarioSalir(usuario);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         Lugar l = lugarDAO.actualizarSalir(usuario.getLugar().getId());
-        usuarioDAO.actualizarUsuarioSalir(usuario);
         return l;
     }
 
@@ -113,9 +116,9 @@ public class GestionLugares {
         Lugar l = lugarDAO.actualizarReservar(id);
         r.setLugar(l);
         r.setInicio(new Date(System.currentTimeMillis()));
-        r.setTicket(ti);
         reservaDAO.crearReserva(r);
-        usuarioDAO.actualizarUsuarioReservar(l, usuario);
+        System.out.println(r);
+        usuarioDAO.actualizarUsuarioReservar(l, usuario, r);
         return lugarDAO.actualizarReservar(id);
     }
 

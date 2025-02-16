@@ -13,7 +13,7 @@ public class Arriendo implements Serializable {
     
     public Arriendo() {}
 
-    public Arriendo(Long id, Date fechaInicio, Date fechaFin, UsuarioCliente usuario, Lugar lugar) {
+    public Arriendo(Long id, Date fechaInicio, Date fechaFin, Usuario usuario, Lugar lugar) {
         this.id = id;
         this.fechaInicio = fechaInicio;
         this.fechaFin = fechaFin;
@@ -33,7 +33,7 @@ public class Arriendo implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
-    private UsuarioCliente usuario;
+    private Usuario usuario;
 
     @OneToOne
     @JoinColumn(name = "lugar_id", nullable = false)
@@ -64,11 +64,11 @@ public class Arriendo implements Serializable {
         this.fechaFin = fechaFin;
     }
 
-    public UsuarioCliente getUsuario() {
+    public Usuario getUsuario() {
         return usuario;
     }
 
-    public void setUsuario(UsuarioCliente usuario) {
+    public void setUsuario(Usuario usuario) {
         this.usuario = usuario;
     }
 
