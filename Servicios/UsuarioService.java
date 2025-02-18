@@ -139,9 +139,19 @@ public class UsuarioService {
                 usuarioExistente.setTelefono(usuario.getTelefono());
                 usuarioExistente.setDireccion(usuario.getDireccion());
                 usuarioExistente.setCedula(usuario.getCedula());
-                usuarioExistente.setStat(usuario.getStat());
                 usuarioExistente.setPlaca(usuario.getPlaca());
-                gestionUsuarios.actualizarUsuario(usuarioExistente);
+
+                try{
+                    if(usuario.getStat() != null) {
+                        usuarioExistente.setStat(usuario.getStat());
+                        gestionUsuarios.actualizarUsuario(usuarioExistente);
+                    } else {
+                        gestionUsuarios.actualizarUsuario(usuarioExistente);
+                    }
+                } catch (Exception e){
+
+                }
+
             }
             return Response.ok(usuarioExistente)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
