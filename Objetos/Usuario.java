@@ -127,7 +127,6 @@ public class Usuario implements Serializable {
         return nombre;
     }
 
-
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
