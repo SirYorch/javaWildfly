@@ -2,14 +2,8 @@ package ups.edu.parking.Gestion;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import ups.edu.parking.DAO.LugarDAO;
-import ups.edu.parking.DAO.TicketDAO;
-import ups.edu.parking.DAO.UsuarioDAO;
-import ups.edu.parking.Objetos.Arriendo;
-import ups.edu.parking.DAO.ArriendoDAO;
-import ups.edu.parking.Objetos.Lugar;
-import ups.edu.parking.Objetos.Ticket;
-import ups.edu.parking.Objetos.Usuario;
+import ups.edu.parking.DAO.*;
+import ups.edu.parking.Objetos.*;
 
 
 import java.util.Date;
@@ -29,11 +23,13 @@ public class GestionArriendos {
     private LugarDAO lugarDAO;
     @Inject
     private TicketDAO ticketDAO;
+    @Inject
+    private ReservaDAO reservaDAO;
 
-    public void crearArriendo(String uid,long lugar_id, Arriendo arriendo) {
+    public void crearArriendo(String uid, long lugar_id, Arriendo arriendo) {
         arriendoDAO.crearArriendo(arriendo);
         Usuario usuario = usuarioDAO.buscarPorUid(uid);
-        Arriendo a = arriendoDAO.buscarPorFechas(arriendo.getFechaInicio(),arriendo.getFechaFin());
+        Arriendo a = arriendoDAO.buscarPorFechas(arriendo.getFechaInicio(), arriendo.getFechaFin());
         usuario.setArriendo(a);
         Lugar lugar = lugarDAO.buscarPorId(lugar_id);
         lugar.setEstado("arrendado");
@@ -53,7 +49,7 @@ public class GestionArriendos {
 
         double precioDia = 3.0;
         double reduccionDia = 0.03;
-        double precio = (dias * precioDia)-(reduccionDia * dias);
+        double precio = (dias * precioDia) - (reduccionDia * dias);
 
         Ticket ti = new Ticket();
         ti.setFechaFin(fechaFin);
@@ -88,9 +84,29 @@ public class GestionArriendos {
             arriendoDAO.eliminarArriendo(arriendo.getId());
             lugarDAO.eliminarReservacion(lugar);
             return true;
-        }catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }
 
+    public void borrarReservas() {
+        List<Usuario> usuarios = usuarioDAO.listarUsuarios();
+        for (Usuario usuario : usuarios) {
+            try {
+                if (usuario.getArriendo() == null & usuario.getReserva() != null) {
+                    Lugar lugar = usuario.getLugar();
+                    Reserva reserva = usuario.getReserva();
+                    usuario.setLugar(null);
+                    usuario.setReserva(null);
+                    usuarioDAO.actualizarUsuario(usuario);
+                    lugarDAO.eliminarReservacion(lugar);
+                    reservaDAO.eliminarReserva(reserva.getId());
+
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+            System.out.println("ReservasEliminadas");
+        }
+    }
 }

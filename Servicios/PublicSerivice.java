@@ -11,6 +11,9 @@ import org.eclipse.microprofile.openapi.annotations.media.Content;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
+import ups.edu.parking.Gestion.GestionArriendos;
+import ups.edu.parking.Gestion.GestionEspacios;
+import ups.edu.parking.Gestion.GestionLugares;
 import ups.edu.parking.Gestion.GestionPublico;
 import ups.edu.parking.Objetos.*;
 
@@ -22,6 +25,12 @@ import java.util.List;
 public class PublicSerivice {
     @Inject
     private GestionPublico gestionPublico;
+    @Inject
+    private GestionLugares gestionLugares;
+    @Inject
+    private GestionEspacios gestionEspacios;
+    @Inject
+    private GestionArriendos gestionArriendos;
 
     @OPTIONS
     @Path("{path:.*}")
@@ -53,6 +62,51 @@ public class PublicSerivice {
                     .build();
         }
     }
+
+    @GET
+    @Path("/enviar")
+    @Operation(summary = "Devuelve el valor publico", description = "Obtiene el objeto publico con datos.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Objeto publico",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Arriendo.class)))
+    })
+    public Response enviarCorreo() {
+        try {
+            Publico publico = gestionPublico.enviarCorreos();
+            return Response.ok(publico)
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener la lista de arriendos: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+
+    @GET
+    @Path("/borrar")
+    @Operation(summary = "Devuelve el valor publico", description = "Obtiene el objeto publico con datos.")
+    @APIResponses({
+            @APIResponse(responseCode = "200", description = "Objeto publico",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Arriendo.class)))
+    })
+    public Response borrarArriendos() {
+        try {
+            gestionArriendos.borrarReservas();
+            return Response.ok()
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        } catch (Exception e) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity("Error al obtener la lista de arriendos: " + e.getMessage())
+                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
+                    .build();
+        }
+    }
+
+
+
 
     @PUT
     @Path("")
