@@ -21,7 +21,7 @@ public class Usuario implements Serializable {
         this.placa = placa;
     }
 
-    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula, String placa, String correo, Reserva reserva, String stat) {
+    public Usuario(String uid, String nombre, String telefono, String direccion, String cedula, String placa, String correo, Reserva reserva, String stat,Lugar lugar,Arriendo arriendo) {
         this.uid = uid;
         this.nombre = nombre;
         this.telefono = telefono;
@@ -30,7 +30,17 @@ public class Usuario implements Serializable {
         this.placa = placa;
         this.correo= correo;
         this.stat = stat;
+        this.lugar = lugar;
+        this.arriendo = arriendo;
         this.reserva = reserva;
+    }
+
+    public Arriendo getArriendo() {
+        return arriendo;
+    }
+
+    public void setArriendo(Arriendo arriendo) {
+        this.arriendo = arriendo;
     }
 
     @Id
@@ -75,6 +85,9 @@ public class Usuario implements Serializable {
     @JoinColumn(name = "reserva_id", nullable = true)
     private Reserva reserva;
 
+    @OneToOne
+    @JoinColumn(name = "arriendo_id", nullable = true)
+    private Arriendo arriendo;
 
     public String getCorreo() {
         return correo;
@@ -113,6 +126,7 @@ public class Usuario implements Serializable {
     public String getNombre() {
         return nombre;
     }
+
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

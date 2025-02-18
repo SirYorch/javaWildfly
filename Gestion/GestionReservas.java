@@ -53,7 +53,7 @@ public class GestionReservas {
 
 
             //cambio de estado de reserva en el Lugar
-            lugarDAO.eliminarReservacion(reserva.getLugar());
+            lugarDAO.eliminarReservacion(usuario.getLugar());
 
 
             return true;

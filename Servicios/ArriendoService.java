@@ -43,15 +43,17 @@ public class ArriendoService {
      * Crea un nuevo arriendo.
      */
     @POST
+    @Path("/{uid}/{lugar_id}")
     @Operation(summary = "Crear un nuevo arriendo", description = "Registra un nuevo arriendo en el sistema.")
     @APIResponses({
             @APIResponse(responseCode = "201", description = "Arriendo creado exitosamente",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = Arriendo.class))),
             @APIResponse(responseCode = "400", description = "Error al crear el arriendo")
     })
-    public Response crearArriendo(Arriendo arriendo) {
+    public Response crearArriendo(@PathParam("uid") String uid,@PathParam("lugar_id") String lugar, Arriendo arriendo) {
         try {
-            gestionArriendos.crearArriendo(arriendo);
+            System.out.println(uid);
+            gestionArriendos.crearArriendo(uid,Long.parseLong(lugar), arriendo);
             return Response.status(Response.Status.CREATED)
                     .entity(arriendo)
                     .header("Access-Control-Allow-Origin", "http://localhost:4200")
@@ -99,37 +101,19 @@ public class ArriendoService {
     /**
      * Lista todos los arriendos registrados.
      */
-    @GET
-    @Operation(summary = "Listar todos los arriendos", description = "Obtiene una lista de todos los arriendos registrados en el sistema.")
-    @APIResponses({
-            @APIResponse(responseCode = "200", description = "Lista de arriendos",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Arriendo.class)))
-    })
-    public Response listarArriendos() {
-        try {
-            List<Arriendo> arriendos = gestionArriendos.listarArriendos();
-            return Response.ok(arriendos)
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity("Error al obtener la lista de arriendos: " + e.getMessage())
-                    .header("Access-Control-Allow-Origin", "http://localhost:4200")
-                    .build();
-        }
-    }
+
 
     /**
      * Elimina un arriendo por su ID.
      */
     @DELETE
-    @Path("/{id}")
+    @Path("/{uid}")
     @Operation(summary = "Eliminar un arriendo", description = "Elimina un arriendo registrado en el sistema mediante su ID.")
     @APIResponses({
             @APIResponse(responseCode = "204", description = "Arriendo eliminado exitosamente"),
             @APIResponse(responseCode = "404", description = "Arriendo no encontrado")
     })
-    public Response eliminarArriendo(@PathParam("id") Long id) {
+    public Response eliminarArriendo(@PathParam("uid") String id) {
         try {
             boolean eliminado = gestionArriendos.eliminarArriendo(id);
             if (eliminado) {

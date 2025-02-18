@@ -100,5 +100,6 @@ public class LugarDAO {
         lugar.setEstado("disponible");
         em.merge(lugar);
     }
+
 }
 

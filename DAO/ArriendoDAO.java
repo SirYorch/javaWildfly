@@ -5,7 +5,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 import ups.edu.parking.Objetos.Arriendo;
+import ups.edu.parking.Objetos.Reserva;
 
+import java.util.Date;
 import java.util.List;
 
 @ApplicationScoped
@@ -26,6 +28,15 @@ public class ArriendoDAO {
 
     public Arriendo buscarPorId(Long id) {
         return em.find(Arriendo.class, id);
+    }
+
+
+    public Arriendo buscarPorFechas(Date fechaInicio, Date fechaFin) {
+        List<Arriendo> arriendos = em.createQuery("SELECT r FROM Arriendo r WHERE r.fecha_Fin = :fechaFin and r.fecha_Inicio = :fechaInicio ", Arriendo.class)
+                .setParameter("fechaFin", fechaFin)
+                .setParameter("fechaInicio", fechaInicio)
+                .getResultList();
+        return arriendos.get(arriendos.size()-1);
     }
 
     public List<Arriendo> listarArriendos() {

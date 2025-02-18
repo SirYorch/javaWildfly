@@ -114,10 +114,8 @@ public class GestionLugares {
         ticketDAO.crearTicket(ti);
         Reserva r = new Reserva();
         Lugar l = lugarDAO.actualizarReservar(id);
-        r.setLugar(l);
         r.setInicio(new Date(System.currentTimeMillis()));
         reservaDAO.crearReserva(r);
-        System.out.println(r);
         usuarioDAO.actualizarUsuarioReservar(l, usuario, r);
         return lugarDAO.actualizarReservar(id);
     }

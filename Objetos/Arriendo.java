@@ -13,12 +13,10 @@ public class Arriendo implements Serializable {
     
     public Arriendo() {}
 
-    public Arriendo(Long id, Date fechaInicio, Date fechaFin, Usuario usuario, Lugar lugar) {
+    public Arriendo(Long id, Date fechaInicio, Date fechaFin) {
         this.id = id;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.usuario = usuario;
-        this.lugar = lugar;
+        this.fecha_Inicio = fechaInicio;
+        this.fecha_Fin = fechaFin;
     }
 
     @Id
@@ -26,18 +24,10 @@ public class Arriendo implements Serializable {
     private Long id;
 
     @Column(name = "fecha_inicio", nullable = false)
-    private Date fechaInicio;
+    private Date fecha_Inicio;
 
     @Column(name = "fecha_fin", nullable = false)
-    private Date fechaFin;
-
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
-
-    @OneToOne
-    @JoinColumn(name = "lugar_id", nullable = false)
-    private Lugar lugar;
+    private Date fecha_Fin;
 
     // Getters y Setters
     public Long getId() {
@@ -49,34 +39,18 @@ public class Arriendo implements Serializable {
     }
 
     public Date getFechaInicio() {
-        return fechaInicio;
+        return fecha_Inicio;
     }
 
     public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
+        this.fecha_Inicio = fechaInicio;
     }
 
     public Date getFechaFin() {
-        return fechaFin;
+        return fecha_Fin;
     }
 
     public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
-    public Usuario getUsuario() {
-        return usuario;
-    }
-
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
-    }
-
-    public Lugar getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
+        this.fecha_Fin = fechaFin;
     }
 }

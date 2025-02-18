@@ -56,7 +56,9 @@ public class UsuarioService {
                     usuarioCliente.getPlaca(),
                     usuarioCliente.getCorreo(),
                     null,
-                    "CLIENTE"
+                    "CLIENTE",
+                    null,
+                    null
             );
 
             gestionUsuarios.crearUsuario(nuevoUsuario);

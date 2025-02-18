@@ -13,10 +13,9 @@ public class Reserva implements Serializable {
 
     public Reserva() {}
 
-    public Reserva(Long id, Date inicio,Lugar lugar) {
+    public Reserva(Long id, Date inicio) {
         this.id = id;
         this.inicio = inicio;
-        this.lugar = lugar;
     }
 
     @Id
@@ -25,19 +24,6 @@ public class Reserva implements Serializable {
 
     @Column(name = "inicio", nullable = false)
     private Date inicio;
-
-    public Lugar getLugar() {
-        return lugar;
-    }
-
-    public void setLugar(Lugar lugar) {
-        this.lugar = lugar;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "lugar_id", nullable = false)
-    private Lugar lugar;
-
     // Getters y Setters
     public Long getId() {
         return id;
